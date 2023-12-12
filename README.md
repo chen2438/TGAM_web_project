@@ -1,6 +1,7 @@
 # controller
 
 环境: Node 16
+
 登录账号: "admin": "password123"
 
 ## Project setup
