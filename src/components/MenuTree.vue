@@ -10,7 +10,7 @@
         <!--          <i class="el-icon-star-off"></i>-->
         <!--          <span slot="title">控制面板</span>-->
         <!--        </el-menu-item>-->
-        <el-menu-item index="/host" >
+        <el-menu-item index="/host">
           <i class="el-icon-s-home"></i>
           <span slot="title">主界面</span>
         </el-menu-item>
@@ -31,7 +31,7 @@
         </el-menu-item>
       </el-submenu>
 
-      <el-submenu index="/monitor" >
+      <el-submenu index="/monitor">
         <template slot="title">
           <i class="el-icon-camera-solid"></i>
           <span>监控中心</span>
@@ -39,6 +39,10 @@
         <el-menu-item index="/data">
           <i class="el-icon-date"></i>
           <span slot="title">实时数据</span>
+        </el-menu-item>
+        <el-menu-item index="/video-surveillance">
+          <i class="el-icon-video-camera"></i>
+          <span slot="title">视频监控</span>
         </el-menu-item>
 
       </el-submenu>

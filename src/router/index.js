@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VideoSurveillance from '../views/VideoSurveillance.vue'
 
 Vue.use(VueRouter)
 
@@ -47,6 +48,10 @@ const routes = [
         path: '/host',
         name: 'Host',
         component: () => import(/* webpackChunkName: "about" */ '../views/Host.vue')
+      }, {
+        path: '/video-surveillance',
+        name: 'VideoSurveillance',
+        component: VideoSurveillance
       }
     ]
   }
