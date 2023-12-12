@@ -1,6 +1,11 @@
 # controller
 
-环境: Node 16
+环境: 
+```
+node v16.20.2
+npm 8.19.4
+python 3.11.5
+```
 
 登录账号: "admin": "password123"
 
