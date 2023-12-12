@@ -16,11 +16,13 @@
           <el-input v-model="loginForm.admin" placeholder="请输入管理用户名" prefix-icon="el-icon-user-solid"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input type="password" v-model="loginForm.password" placeholder="请输入登录密码" prefix-icon="el-icon-lock"></el-input>
+          <el-input type="password" v-model="loginForm.password" placeholder="请输入登录密码"
+            prefix-icon="el-icon-lock"></el-input>
         </el-form-item>
         <el-form-item prop="verifyCode">
           <div class="verifyCode_box">
-            <el-input v-model="loginForm.verifyCode" placeholder="请输入计算结果" prefix-icon="el-icon-mobile" class="verifyCode"></el-input>
+            <el-input v-model="loginForm.verifyCode" placeholder="请输入计算结果" prefix-icon="el-icon-mobile"
+              class="verifyCode"></el-input>
             <img src="../assets/img/mskKPg.png" alt="" class="verifyCode_img">
           </div>
         </el-form-item>
@@ -38,7 +40,7 @@ import { adminLogin } from '@/api/admin'
 
 export default {
   name: 'Login',
-  data () {
+  data() {
     return {
       loginForm: {
         admin: '',
@@ -61,7 +63,7 @@ export default {
     }
   },
   methods: {
-    submitForm (loginForm) {
+    submitForm(loginForm) {
       // eslint-disable-next-line no-unused-expressions
       this.$refs[loginForm].validate(valid => {
         if (!valid) {
@@ -76,14 +78,12 @@ export default {
       this.getadminLogin()
       // 获取admin的信息
     },
-    resetForm (formName) {
+    resetForm(formName) {
       this.$refs[formName].resetFields()
     },
-    async getadminLogin () {
-      // eslint-disable-next-line no-unused-vars
+    async getadminLogin() {
       const { data } = await adminLogin(this.loginForm.admin, this.loginForm.password)
       console.log(data)
-      // eslint-disable-next-line no-undef
       this.$store.commit('getToken', data.data.token)
       this.$store.commit('getData', data.data.shop)
       console.log(this.$store.state.token)
@@ -116,7 +116,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .title {
   color: dimgray;
   -webkit-text-stroke: 1px black;
@@ -144,7 +143,7 @@ export default {
   top: 50%;
   transform: translate(-50%, -50%);
 
-  .avatar_box{
+  .avatar_box {
     width: 130px;
     height: 130px;
     border: 1px solid #EEEEEE;
@@ -154,7 +153,7 @@ export default {
     margin: -65px auto;
     background-color: #FFFFFF;
 
-    img{
+    img {
       width: 100%;
       height: 100%;
       border-radius: 50%;
@@ -162,26 +161,27 @@ export default {
     }
   }
 
-  .login_form{
+  .login_form {
     position: absolute;
     bottom: 0px;
     width: 100%;
     padding: 0px 20px;
     box-sizing: border-box;
 
-    .login_btn{
+    .login_btn {
       display: flex;
       justify-content: flex-end;
     }
 
-    .verifyCode_box{
+    .verifyCode_box {
       display: flex;
-      .verifyCode{
+
+      .verifyCode {
         width: 70%;
         justify-content: left;
       }
 
-      .verifyCode_img{
+      .verifyCode_img {
         width: 30%;
         height: 45px;
         justify-content: flex-end;
@@ -189,10 +189,10 @@ export default {
     }
   }
 }
-.login_container{
+
+.login_container {
   background: url(../assets/img/img_3.png) no-repeat;
   background-size: 100% 770px;
   overflow: hidden;
   height: 100%;
-}
-</style>
+}</style>

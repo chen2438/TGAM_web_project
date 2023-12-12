@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import request from '../utils/request'
 
 /**
@@ -11,9 +10,23 @@ export const adminLogin = (adminName, adminPwd) => {
   return request({
     url: '/Admin/AdminLogin',
     method: 'post',
-    params: {
+    headers: {
+      'Content-Type': 'application/json', // 明确设置 Content-Type
+    },
+    data: { // 使用 data 而不是 param 发送请求体
       adminName,
       adminPwd
     }
   })
 }
+
+// export const adminLogin = (adminName, adminPwd) => {
+//   return request({
+//     url: '/Admin/AdminLogin',
+//     method: 'post',
+//     param: {
+//       adminName,
+//       adminPwd
+//     }
+//   })
+// }
