@@ -6,8 +6,7 @@ from scipy.spatial import distance as dist
 from imutils import face_utils
 import base64
 
-app.config["SECRET_KEY"] = "secret!"
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO()
 
 # 加载dlib的人脸检测器和形状预测器
 detector = dlib.get_frontal_face_detector()
