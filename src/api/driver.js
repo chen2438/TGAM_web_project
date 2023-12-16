@@ -12,8 +12,8 @@ export const findUserList = (current, size) => {
     url: '/User/common/findUserList',
     method: 'get',
     params: {
-      current,
-      size
+      current,//第几页
+      size//每页大小
     }
   })
 }
@@ -34,20 +34,20 @@ export const getUserById = (userId) => {
 }
 
 /**
- * 修改司机信息
+ * 管理员修改司机信息
  * @param userId
  * @param userCity
  * @param userAddress
  * @returns {AxiosPromise}
  */
-export const editUser = (userId, userCity, userAddress) => {
+export const editUser = (userId, userScore, reason) => {
   return request({
     url: '/User/common/editUser',
     method: 'get',
     params: {
       userId,
-      userCity,
-      userAddress
+      userScore,
+      reason
     }
   })
 }
@@ -99,6 +99,35 @@ export const warningtiredUserById = (userId) => {
     method: 'POST',
     params: {
       userId
+    }
+  })
+}
+/*
+* 个人中心信息展示
+* */
+export const userInfo = (userId) => {
+  return request({
+    url: '/User/userInfo',
+    method: 'GET',
+    params:{
+      userId
+    }
+  })
+}
+
+/*
+* 司机修改个人信息
+* */
+export const updateUser = (userId,userAddress,userPassword,userTime,userPhone) => {
+  return request({
+    url: '/User/updateuser',
+    method: 'GET',
+    params:{
+      userId,
+      userAddress,
+      userPassword,
+      userTime,
+      userPhone
     }
   })
 }

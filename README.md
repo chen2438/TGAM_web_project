@@ -7,7 +7,7 @@ npm 8.19.4
 python 3.11.5
 ```
 
-登录账号: "admin": "password123"
+登录账号: "admin": "admin123456"
 
 ## Project setup
 ```
@@ -20,6 +20,9 @@ npm run serve
 ```
 
 ### 启动后端
+
+确保目前位于项目根目录
+
 ```
 python3 src/backend/app.py
 ```

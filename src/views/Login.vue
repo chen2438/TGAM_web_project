@@ -12,8 +12,8 @@
       </div>
       <!--表单-->
       <el-form :model="loginForm" :rules="loginRules" ref="loginForm" label- width="0px" class="login_form">
-        <el-form-item prop="admin">
-          <el-input v-model="loginForm.admin" placeholder="请输入管理用户名" prefix-icon="el-icon-user-solid"></el-input>
+        <el-form-item prop="account">
+          <el-input v-model="loginForm.account" placeholder="请输入帐户用户名" prefix-icon="el-icon-user-solid"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input type="password" v-model="loginForm.password" placeholder="请输入登录密码"
@@ -26,9 +26,13 @@
             <img src="../assets/img/mskKPg.png" alt="" class="verifyCode_img">
           </div>
         </el-form-item>
-        <el-form-item class="login_btn">
+
+
+        <el-form-item class="login_btn" style="white-space: pre;">
           <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
           <el-button @click="resetForm('loginForm')">重置</el-button>
+          {{ ' '.repeat(2) }}
+          <router-link to="/register" class="tip-color">没有账号？去注册（默认司机）</router-link>
         </el-form-item>
       </el-form>
     </div>
@@ -36,20 +40,24 @@
 </template>
 
 <script>
-import { adminLogin } from '@/api/admin'
+// 从 admin API 文件中导入 accountLogin 方法，用于登录请求
+import { accountLogin } from '@/api/admin'
 
 export default {
-  name: 'Login',
+  name: 'Login',  // 组件名称
   data() {
     return {
+      // 登录表单的数据模型
       loginForm: {
-        admin: '',
-        password: '',
-        verifyCode: ''
+        account: '',     // 用户账号
+        password: '',    // 登录密码
+        verifyCode: '',  // 验证码
+        sessionid: null, // 会话ID
       },
+      // 登录表单的验证规则
       loginRules: {
         admin: [
-          { required: true, message: '请输入管理用户名', trigger: 'blur' },
+          { required: true, message: '请输入登录用户名', trigger: 'blur' },
           { min: 1, max: 12, message: '请输入1-12位', trigger: 'blur' }
         ],
         password: [
@@ -63,10 +71,12 @@ export default {
     }
   },
   methods: {
+    // 提交登录表单的方法
     submitForm(loginForm) {
-      // eslint-disable-next-line no-unused-expressions
+      // 使用Element UI的表单验证
       this.$refs[loginForm].validate(valid => {
         if (!valid) {
+          // 表单验证未通过时的提示信息
           this.$message({
             message: '请完整输入',
             type: 'warning',
@@ -75,38 +85,59 @@ export default {
           return false
         }
       })
+      // 调用登录请求方法
       this.getadminLogin()
-      // 获取admin的信息
     },
+    // 重置登录表单的方法
     resetForm(formName) {
+      // 重置表单字段
       this.$refs[formName].resetFields()
     },
+    // 异步方法，执行登录请求
     async getadminLogin() {
-      const { data } = await adminLogin(this.loginForm.admin, this.loginForm.password)
+      // 发送登录请求，等待结果
+      const { data } = await accountLogin(this.loginForm.account, this.loginForm.password)
+      // 打印响应数据
       console.log(data)
+      // 将token、shop数据和sessionid存储到Vuex
       this.$store.commit('getToken', data.data.token)
       this.$store.commit('getData', data.data.shop)
+      this.$store.commit('getId', data.data.sessionid)
+      // 打印存储到Vuex的数据
       console.log(this.$store.state.token)
       console.log(this.$store.state.data)
+      console.log(this.$store.state.sessionid)
+      // 根据响应数据判断登录状态，并显示对应的提示消息
       if (data.code === 4001) {
         this.$message({
-          message: '本管理员用户名不存在',
+          message: '用户名不存在',
           type: 'warning',
-          duration: 2000
+          duration: 2000,
         })
       } else if (data.code === 4002) {
         this.$message({
-          message: '管理员用户名对应密码错误',
+          message: '用户名对应密码错误',
           type: 'warning',
           duration: 2000
         })
-      } else if (data.code === 20000) {
+      } else if (data.code === 20000 && data.data.type === 0) {
+        // 管理员登录成功，跳转到管理员主界面
         this.$message({
           message: '登录成功',
           type: 'success',
           duration: 2000,
           onClose: () => {
-            this.$router.push('/main')
+            this.$router.push('/Adminmain')
+          }
+        })
+      } else if (data.code === 20000 && data.data.type === 1) {
+        // 普通用户登录成功，跳转到用户主界面
+        this.$message({
+          message: '登录成功',
+          type: 'success',
+          duration: 2000,
+          onClose: () => {
+            this.$router.push('/Usermain')
           }
         })
       }
@@ -114,6 +145,7 @@ export default {
   }
 }
 </script>
+
 
 <style lang="less" scoped>
 .title {
@@ -135,7 +167,7 @@ export default {
 
 .login_box {
   width: 450px;
-  height: 380px;
+  height: 400px;
   background-color: #FFFFFF;
   border-radius: 3px;
   position: absolute;
@@ -173,6 +205,18 @@ export default {
       justify-content: flex-end;
     }
 
+    .tip-color {
+      color: #708090;
+    }
+
+    .tip-color:hover {
+      color: red;
+    }
+
+    .tip-color:active {
+      color: green;
+    }
+
     .verifyCode_box {
       display: flex;
 
@@ -195,4 +239,5 @@ export default {
   background-size: 100% 770px;
   overflow: hidden;
   height: 100%;
-}</style>
+}
+</style>

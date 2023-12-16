@@ -1,32 +1,35 @@
 import request from '../utils/request'
 
 /**
- * 管理员登录
- * @param adminName
- * @param adminPwd
+ * 账号登录
+ * @param Name
+ * @param Pwd
  * @returns {AxiosPromise}
  */
-export const adminLogin = (adminName, adminPwd) => {
+export const accountLogin = (Name, Pwd) => {
   return request({
-    url: '/Admin/AdminLogin',
+    url: '/Account/AccountLogin',
     method: 'post',
     headers: {
       'Content-Type': 'application/json', // 明确设置 Content-Type
     },
     data: { // 使用 data 而不是 param 发送请求体
-      adminName,
-      adminPwd
+      Name,
+      Pwd
     }
   })
 }
 
-// export const adminLogin = (adminName, adminPwd) => {
-//   return request({
-//     url: '/Admin/AdminLogin',
-//     method: 'post',
-//     param: {
-//       adminName,
-//       adminPwd
-//     }
-//   })
-// }
+export const register = (admin, password) => {
+  return request({
+    url: '/Account/AccountRegister',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json', // 明确设置 Content-Type
+    },
+    data: {
+      admin,
+      password
+    }
+  })
+}
