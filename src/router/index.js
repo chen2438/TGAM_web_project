@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import VideoSurveillance from '../views/VideoSurveillance.vue'
 
 Vue.use(VueRouter)
 
@@ -15,43 +14,80 @@ const routes = [
     component: () => import('../views/home.vue')
   },
   {
+    path: '/register',
+    name: 'Register',
+    component: () => import('../views/Register.vue')
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('../views/Login.vue')
   },
   {
-    path: '/main',
-    name: 'Main',
-    component: () => import('../views/Main.vue'),
+    path: '/Adminmain',
+    name: 'AdminMain',
+    component: () => import('../views/Admin/Main.vue'),
     children: [
       {
-        path: '/driver',
-        name: 'Driver',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Information/Driver.vue')
+        path: '/admindriver',
+        name: 'AdminDriver',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Admin/Information/Driver.vue')
       }, {
-        path: '/car',
-        name: 'Car',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Information/Car.vue')
+        path: '/admincar',
+        name: 'AdminCar',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Admin/Information/Car.vue')
       }, {
-        path: '/place',
-        name: 'Place',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Information/Place.vue')
+        path: '/adminplace',
+        name: 'AdminPlace',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Admin/Information/Place.vue')
       }, {
-        path: '/data',
-        name: 'Data',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Controller/Data.vue')
+        path: '/admindata',
+        name: 'AdminData',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Admin/Controller/Data.vue')
       }, {
-        path: '/record',
-        name: 'Record',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Controller/Record.vue')
+        path: '/adminrecord',
+        name: 'AdminRecord',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Admin/Controller/Record.vue')
       }, {
-        path: '/host',
-        name: 'Host',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Host.vue')
+        path: '/adminhost',
+        name: 'AdminHost',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Admin/Host.vue')
       }, {
-        path: '/video-surveillance',
-        name: 'VideoSurveillance',
-        component: VideoSurveillance
+        path: '/admin-video-surveillance',
+        name: 'AdminVideoSurveillance',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Admin/Controller/VideoSurveillance.vue')
+      }
+    ]
+  },
+  {
+    path: '/Usermain',
+    name: 'UserMain',
+    component: () => import('../views/User/Main.vue'),
+    children: [
+      {
+        path: '/userintro',
+        name: 'UserIntro',
+        component: () => import(/* webpackChunkName: "about" */ '../views/User/Information/Introduce.vue')
+      }, {
+        path: '/userinfo',
+        name: 'UserInfo',
+        component: () => import(/* webpackChunkName: "about" */ '../views/User/Information/UserInfo.vue')
+      }, {
+        path: '/userplace',
+        name: 'UserPlace',
+        component: () => import(/* webpackChunkName: "about" */ '../views/User/Information/Place.vue')
+      }, {
+        path: '/userdata',
+        name: 'UserData',
+        component: () => import(/* webpackChunkName: "about" */ '../views/User/Controller/Data.vue')
+      }, {
+        path: '/userhost',
+        name: 'UserHost',
+        component: () => import(/* webpackChunkName: "about" */ '../views/User/Host.vue')
+      }, {
+        path: '/user-video-surveillance',
+        name: 'UserVideoSurveillance',
+        component: () => import(/* webpackChunkName: "about" */ '../views/User/Controller/VideoSurveillance.vue')
       }
     ]
   }

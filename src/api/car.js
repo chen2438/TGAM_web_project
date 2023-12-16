@@ -28,9 +28,9 @@ export const queryCarList = (current, size, city, plate, style) => {
     params: {
       current,
       size,
-      carCity: city,
-      carPlates: plate,
-      carStyle: style
+      carCity: city,//城市
+      carPlates: plate,//车牌
+      carStyle: style//车型
     }
   })
 }

@@ -12,8 +12,8 @@
       </div>
       <!--表单-->
       <el-form :model="loginForm" :rules="loginRules" ref="loginForm" label- width="0px" class="login_form">
-        <el-form-item prop="admin">
-          <el-input v-model="loginForm.admin" placeholder="请输入管理用户名" prefix-icon="el-icon-user-solid"></el-input>
+        <el-form-item prop="account">
+          <el-input v-model="loginForm.account" placeholder="请输入帐户用户名" prefix-icon="el-icon-user-solid"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input type="password" v-model="loginForm.password" placeholder="请输入登录密码"
@@ -26,9 +26,13 @@
             <img src="../assets/img/mskKPg.png" alt="" class="verifyCode_img">
           </div>
         </el-form-item>
-        <el-form-item class="login_btn">
+
+        
+        <el-form-item class="login_btn" style="white-space: pre;">
           <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
           <el-button @click="resetForm('loginForm')">重置</el-button>
+          {{ ' '.repeat(2) }}
+          <router-link to="/register" class="tip-color">没有账号？去注册（默认司机）</router-link>
         </el-form-item>
       </el-form>
     </div>
@@ -36,20 +40,21 @@
 </template>
 
 <script>
-import { adminLogin } from '@/api/admin'
+import { accountLogin } from '@/api/admin'
 
 export default {
   name: 'Login',
   data() {
     return {
       loginForm: {
-        admin: '',
+        account: '',
         password: '',
-        verifyCode: ''
+        verifyCode: '',
+        sessionid: null,
       },
       loginRules: {
         admin: [
-          { required: true, message: '请输入管理用户名', trigger: 'blur' },
+          { required: true, message: '请输入登录用户名', trigger: 'blur' },
           { min: 1, max: 12, message: '请输入1-12位', trigger: 'blur' }
         ],
         password: [
@@ -72,6 +77,7 @@ export default {
             type: 'warning',
             duration: 1200
           })
+          
           return false
         }
       })
@@ -82,31 +88,42 @@ export default {
       this.$refs[formName].resetFields()
     },
     async getadminLogin() {
-      const { data } = await adminLogin(this.loginForm.admin, this.loginForm.password)
+      const { data } = await accountLogin(this.loginForm.account, this.loginForm.password)
       console.log(data)
       this.$store.commit('getToken', data.data.token)
       this.$store.commit('getData', data.data.shop)
+      this.$store.commit('getId', data.data.sessionid)
       console.log(this.$store.state.token)
       console.log(this.$store.state.data)
+      console.log(this.$store.state.sessionid)
       if (data.code === 4001) {
         this.$message({
-          message: '本管理员用户名不存在',
+          message: '用户名不存在',
           type: 'warning',
-          duration: 2000
+          duration: 2000,
         })
       } else if (data.code === 4002) {
         this.$message({
-          message: '管理员用户名对应密码错误',
+          message: '用户名对应密码错误',
           type: 'warning',
           duration: 2000
         })
-      } else if (data.code === 20000) {
+      } else if (data.code === 20000 && data.data.type === 0) {
         this.$message({
           message: '登录成功',
           type: 'success',
           duration: 2000,
           onClose: () => {
-            this.$router.push('/main')
+            this.$router.push('/Adminmain')
+          }
+        })
+       } else if(data.code === 20000 && data.data.type === 1){
+        this.$message({
+          message: '登录成功',
+          type: 'success',
+          duration: 2000,
+          onClose: () => {
+            this.$router.push('/Usermain')
           }
         })
       }
@@ -135,7 +152,7 @@ export default {
 
 .login_box {
   width: 450px;
-  height: 380px;
+  height: 400px;
   background-color: #FFFFFF;
   border-radius: 3px;
   position: absolute;
@@ -171,6 +188,17 @@ export default {
     .login_btn {
       display: flex;
       justify-content: flex-end;
+    }
+    .tip-color {
+      color: #708090;
+    }
+
+    .tip-color:hover {
+      color: red;
+    }
+
+    .tip-color:active {
+      color: green;
     }
 
     .verifyCode_box {

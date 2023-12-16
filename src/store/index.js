@@ -6,7 +6,8 @@ export default new Vuex.Store({
   state: {
     data: {
     },
-    token: ''
+    token: '',
+    sessionid: null
   },
   mutations: {
     getToken: (state, token) => {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     },
     getData: (state, data) => {
       state.data = data
+    },
+    getId:(state, sessionid) => {
+      state.sessionid = sessionid
     }
   },
   actions: {
