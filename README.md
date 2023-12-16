@@ -20,6 +20,9 @@ npm run serve
 ```
 
 ### 启动后端
+
+确保目前位于项目根目录
+
 ```
 python3 src/backend/app.py
 ```
