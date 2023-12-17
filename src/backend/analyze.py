@@ -14,11 +14,17 @@ predictor = dlib.shape_predictor("src/backend/shape_predictor_68_face_landmarks.
 
 # 定义闭眼阈值和帧计数
 EYE_AR_THRESH = 0.15
-EYE_AR_CONSEC_FRAMES = 15
+EYE_AR_CONSEC_FRAMES = 10
 
-# 初始化帧计数器和闭眼计数器
-COUNTER = 0
-TOTAL = 0
+# 定义打哈欠阈值和帧计数
+MOUTH_AR_THRESH = 0.6
+MOUTH_AR_CONSEC_FRAMES = 10
+
+# 初始化帧计数器和闭眼、打哈欠计数器
+EYE_COUNTER = 0
+MOUTH_COUNTER = 0
+EYE_TOTAL = 0
+MOUTH_TOTAL = 0
 
 
 def eye_aspect_ratio(eye):
@@ -34,9 +40,18 @@ def eye_aspect_ratio(eye):
     return ear
 
 
+def mouth_aspect_ratio(mouth):
+    # 计算嘴巴的纵横比
+    A = dist.euclidean(mouth[2], mouth[10])  # 51, 59
+    B = dist.euclidean(mouth[4], mouth[8])  # 53, 57
+    C = dist.euclidean(mouth[0], mouth[6])  # 49, 55
+    mar = (A + B) / (2.0 * C)
+    return mar
+
+
 @socketio.on("frame")
 def handle_frame(data):
-    global COUNTER, TOTAL
+    global EYE_COUNTER, EYE_TOTAL, MOUTH_COUNTER, MOUTH_TOTAL
     # 解码图像
     img_data = base64.b64decode(data)
     nparr = np.frombuffer(img_data, np.uint8)
@@ -46,7 +61,7 @@ def handle_frame(data):
     frame = cv2.flip(frame, 1)
 
     # 调整帧的大小以加快处理速度
-    # frame = cv2.resize(frame, (960, 540))
+    # frame = cv2.resize(frame, (800, 600))
 
     # 将帧转换为灰度图像
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -55,7 +70,8 @@ def handle_frame(data):
     faces = detector(gray)
 
     # 假设状态为正常
-    text = "Normal"
+    eye_text = "正常"
+    mouth_text = "正常"
 
     for face in faces:
         # 绘制人脸识别框
@@ -83,19 +99,46 @@ def handle_frame(data):
 
         # 检查纵横比是否低于阈值
         if ear < EYE_AR_THRESH:
-            COUNTER += 1
-            text = "Fatigue"
+            EYE_COUNTER += 1
+            eye_text = "眯眼"
         else:
             # 纵横比高于阈值时，如果连续帧计数大于等于阈值，则疲劳驾驶计数加1
-            if COUNTER >= EYE_AR_CONSEC_FRAMES:
-                TOTAL += 1
+            if EYE_COUNTER >= EYE_AR_CONSEC_FRAMES:
+                EYE_TOTAL += 1
 
             # 重置帧计数器
-            COUNTER = 0
+            EYE_COUNTER = 0
+
+        # 提取嘴巴的坐标
+        mouth = shape[48:68]
+
+        # 计算嘴巴的纵横比
+        mar = mouth_aspect_ratio(mouth)
+
+        # 检查嘴巴纵横比是否大于阈值，以检测打哈欠
+        if mar > MOUTH_AR_THRESH:
+            MOUTH_COUNTER += 1
+            mouth_text = "打哈欠"
+        else:
+            # 纵横比高于阈值时，如果连续帧计数大于等于阈值，则疲劳驾驶计数加1
+            if MOUTH_COUNTER >= MOUTH_AR_CONSEC_FRAMES:
+                MOUTH_TOTAL += 1
+
+            # 重置帧计数器
+            MOUTH_COUNTER = 0
 
     # 将处理后的帧编码为JPEG，然后转换为Base64字符串
     _, buffer = cv2.imencode(".jpg", frame)
     response = base64.b64encode(buffer).decode("utf-8")
 
     # 发送响应到客户端
-    emit("response", {"data": response, "count": TOTAL, "status": text})
+    emit(
+        "response",
+        {
+            "data": response,
+            "eye_count": EYE_TOTAL,
+            "eye_text": eye_text,
+            "mouth_count": MOUTH_TOTAL,
+            "mouth_text": mouth_text,
+        },
+    )
