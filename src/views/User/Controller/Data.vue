@@ -14,17 +14,17 @@
     <el-card class="box-card">
       <!--用户司机信息表格-->
       <el-table max-height="369px" :data="userList" border style="width: 100%">
-        <el-table-column prop="userId" label="用户编号" width="80">
+        <el-table-column prop="userId" label="用户编号">
         </el-table-column>
-        <el-table-column prop="userName" label="姓名" width="100">
+        <el-table-column prop="userName" label="姓名">
         </el-table-column>
-        <el-table-column prop="carPlates" label="当前驾驶车牌" width="180">
+        <el-table-column prop="carPlates" label="当前驾驶车牌">
         </el-table-column>
-        <el-table-column prop="tiredSituation" label="十分钟（600s）内疲劳情况" width="400">
+        <el-table-column prop="tiredSituation" label="疲劳情况">
         </el-table-column>
-        <el-table-column prop="times" label="总疲劳次数(次/30s)" width="160">
-        </el-table-column>
-        <el-table-column prop="reminded" label="被提醒次数" width="100">
+        <!-- <el-table-column prop="times" label="平均疲劳次数" width="160">
+        </el-table-column> -->
+        <el-table-column prop="reminded" label="提醒计数">
         </el-table-column>
         <el-table-column prop="alltimes" label="驾车总时长（s）">
         </el-table-column>
