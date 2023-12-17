@@ -10,15 +10,14 @@
             </el-breadcrumb>
         </div>
         <video ref="videoElement" autoplay style="display: none;"></video>
-        <img :src="imageSrc" />
-        <div>
-            <p>眯眼计数: {{ eye_count }}</p>
-            <p>眼部状态: {{ eye_text }}</p>
-            <p>打哈欠计数: {{ mouth_count }}</p>
-            <p>嘴部状态: {{ mouth_text }}</p>
-        </div>
+        <img :src="imageSrc" class="img-styled" />
+        <el-table :data="tableData" class="img-styled">
+            <el-table-column prop="label" label="项目"></el-table-column>
+            <el-table-column prop="value" label="数据"></el-table-column>
+        </el-table>
     </div>
 </template>
+
 
   
 <script>
@@ -33,8 +32,25 @@ export default {
             imageSrc: '',
             fatigueCount: 0,
             status: 'Normal',
-            socket: io('http://localhost:8000') // Replace with your server URL and port
+            socket: io('http://localhost:8000'), // Replace with your server URL and port
+            tableData: [
+                { label: '眯眼计数', value: '' },
+                { label: '眼部状态', value: '' },
+                { label: '打哈欠计数', value: '' },
+                { label: '嘴部状态', value: '' }
+            ]
         };
+
+    },
+    methods: {
+        updateTableData() {
+            this.tableData = [
+                { label: '眯眼计数', value: this.eye_count },
+                { label: '眼部状态', value: this.eye_text },
+                { label: '打哈欠计数', value: this.mouth_count },
+                { label: '嘴部状态', value: this.mouth_text }
+            ];
+        }
     },
     mounted() {
         this.videoElement = this.$refs.videoElement;
@@ -65,6 +81,7 @@ export default {
             this.eye_text = data.eye_text;
             this.mouth_count = data.mouth_count;
             this.mouth_text = data.mouth_text;
+            this.updateTableData(); // 更新表格数据
         });
     },
     beforeDestroy() {
@@ -74,10 +91,22 @@ export default {
 </script>
   
 <style>
-img {
+.img-styled {
+    border: 4px solid #ddd;
+    /* 添加边框 */
+    border-radius: 10px;
+    /* 圆角边框 */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    /* 添加阴影 */
     width: 80%;
-    max-width: 600px;
+    /* 调整图片宽度 */
+    max-width: 500px;
+    /* 最大宽度 */
     height: auto;
+    /* 高度自适应 */
+    display: block;
+    /* 居中显示 */
+    margin: 10px auto;
+    /* 上下外边距 */
 }
 </style>
-
