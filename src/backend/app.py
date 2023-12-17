@@ -186,10 +186,21 @@ def find_car_city_and_count():
 
 
 @app.route("/Car/queryCarList", methods=["GET"])
-def query_car_list():
+def query_car_list(city=None,plates=None,style=None):
     # 这里可以添加筛选逻辑，根据请求参数过滤cars
     # 例如: city = request.args.get('carCity')
-    return jsonify({"code": 20000, "data": {"records": cars, "total": len(cars)}})
+    city = request.args.get('carCity')
+    plates = request.args.get('carPlates')
+    style = request.args.get('carStyle')
+    filtered_car = cars
+    if city:
+        filtered_car = [item for item in filtered_car if item['carCity'] == city]
+    if plates:
+        filtered_car = [item for item in filtered_car if item['carPlates'].find(plates) != -1]
+    if style:
+        filtered_car = [item for item in filtered_car if item['carStyle'] == style]
+    print('filtered_car',filtered_car)
+    return jsonify({"code": 20000, "data": {"records": filtered_car, "total": len(cars)}})
 
 
 @app.route("/User/common/findUserList", methods=["GET"])
@@ -218,10 +229,12 @@ def edit_user():
     return jsonify({"code": 20000, "message": "用户信息更新成功"})
 
 
-@app.route("/User/common/deleteUser", methods=["GET"])
+@app.route("/User/common/deleteUser", methods=["POST"])
 def delete_user():
-    # 这里应该是DELETE请求，用于删除用户
-    # 在这里只返回成功信息
+    global users # 引入全局变量
+    userId_to_delete = request.json.get('userId')
+    # 使用列表推导式创建一个新的列表，仅保留 userId 不等于要删除的值的数据项
+    users = [user for user in users if user['userId'] != userId_to_delete]
     return jsonify({"code": 20000, "message": "用户删除成功"})
 
 
@@ -297,6 +310,8 @@ def updateUser():
     temp_user = request.args.get("userId")
     return jsonify({"code": 20000, "message": "用户修改成功"})
 
-
+from gevent import pywsgi;
 if __name__ == "__main__":
-    socketio.run(app, debug=True, port=8000)
+    server = pywsgi.WSGIServer(('0.0.0.0', 8000), app)
+    server.serve_forever()
+    # socketio.run(app, debug=True, port=8000)
