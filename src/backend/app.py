@@ -27,24 +27,41 @@ cars = [
     {
         "carId": 1,
         "carState": 0,  # 0未启动，1启动
-        "carPlates": "ABC123",
+        "carPlates": "浙A3N809",
         "carStyle": "小型车",
         "userName": "User1",
         "userId": 1,
-        "userPhone": "1234567890",
+        "userPhone": "13158375930",
         "carCity": "City1",
-        "userAddress": "Address1",
+        "userAddress": "杭州市钱塘区白杨街道浙江理工大学学生生活2区",
+        "carTude": "120.1,30.2",
+        "userNow": 0,  # 0疲劳驾驶,1正常
     },
     {
         "carId": 2,
         "carState": 1,  # 0未启动，1启动
-        "carPlates": "DEF123",
+        "carPlates": "浙B8GJ65",
         "carStyle": "大型车",
         "userName": "User2",
         "userId": 2,
-        "userPhone": "12322227890",
+        "userPhone": "13285836284",
         "carCity": "City2",
         "userAddress": "Address2",
+        "carTude": "120.2,30.3",
+        "userNow": 0,
+    },
+    {
+        "carId": 3,
+        "carState": 1,  # 0未启动，1启动
+        "carPlates": "浙C6H975",
+        "carStyle": "中型车",
+        "userName": "User3",
+        "userId": 3,
+        "userPhone": "13385873954",
+        "carCity": "City3",
+        "userAddress": "Address3",
+        "carTude": "120.3,30.1",
+        "userNow": 1,
     },
     # ... 其他车辆数据
 ]
@@ -52,10 +69,10 @@ users = [
     {
         "userId": 1,
         "userName": "User1",
-        "userPhone": "1234567890",
+        "userPhone": "13158375930",
         "userTime": "2023-01-01",
-        "userScore": 10,  # 司机驾驶分
-        "userAddress": "Address1",
+        "userScore": 8,  # 司机驾驶分
+        "userAddress": "浙江理工大学学生生活2区",
         "userAccount": "driver",
         "userPassword": "driver123456",
         "type": 1,  # 司机
@@ -63,7 +80,7 @@ users = [
     {
         "userId": 2,
         "userName": "User2",
-        "userPhone": "12322227890",
+        "userPhone": "13285836284",
         "userTime": "2023-01-01",
         "userScore": 12,  # 司机驾驶分
         "userAddress": "Address2",
@@ -72,9 +89,9 @@ users = [
         "type": 1,  # 司机
     },
     {
-        "userId": 1,
+        "userId": 0,
         "userName": "admin1",
-        "userPhone": "1231117890",
+        "userPhone": "13019273638",
         "userTime": "2013-11-11",
         "userScore": 12,  # 初始化驾驶分数都是12，虽然对管理员没用
         "userAddress": "Address0",
@@ -106,8 +123,8 @@ tired = [
     },
 ]
 events = [
-    {"eventTime": "2018-4-2 20:46", "event": "过度疲劳，被警示，扣2分"},
-    {"eventTime": "2018-5-2 18:45", "event": "过度疲劳，被警示，扣2分"},
+    {"eventTime": "2023-4-2 20:46", "event": "过度疲劳，被警示，扣2分"},
+    {"eventTime": "2023-5-2 18:45", "event": "过度疲劳，被警示，扣2分"},
 ]
 
 
@@ -186,21 +203,25 @@ def find_car_city_and_count():
 
 
 @app.route("/Car/queryCarList", methods=["GET"])
-def query_car_list(city=None,plates=None,style=None):
+def query_car_list(city=None, plates=None, style=None):
     # 这里可以添加筛选逻辑，根据请求参数过滤cars
     # 例如: city = request.args.get('carCity')
-    city = request.args.get('carCity')
-    plates = request.args.get('carPlates')
-    style = request.args.get('carStyle')
+    city = request.args.get("carCity")
+    plates = request.args.get("carPlates")
+    style = request.args.get("carStyle")
     filtered_car = cars
     if city:
-        filtered_car = [item for item in filtered_car if item['carCity'] == city]
+        filtered_car = [item for item in filtered_car if item["carCity"] == city]
     if plates:
-        filtered_car = [item for item in filtered_car if item['carPlates'].find(plates) != -1]
+        filtered_car = [
+            item for item in filtered_car if item["carPlates"].find(plates) != -1
+        ]
     if style:
-        filtered_car = [item for item in filtered_car if item['carStyle'] == style]
-    print('filtered_car',filtered_car)
-    return jsonify({"code": 20000, "data": {"records": filtered_car, "total": len(cars)}})
+        filtered_car = [item for item in filtered_car if item["carStyle"] == style]
+    print("filtered_car", filtered_car)
+    return jsonify(
+        {"code": 20000, "data": {"records": filtered_car, "total": len(cars)}}
+    )
 
 
 @app.route("/User/common/findUserList", methods=["GET"])
@@ -231,10 +252,10 @@ def edit_user():
 
 @app.route("/User/common/deleteUser", methods=["POST"])
 def delete_user():
-    global users # 引入全局变量
-    userId_to_delete = request.json.get('userId')
+    global users  # 引入全局变量
+    userId_to_delete = request.json.get("userId")
     # 使用列表推导式创建一个新的列表，仅保留 userId 不等于要删除的值的数据项
-    users = [user for user in users if user['userId'] != userId_to_delete]
+    users = [user for user in users if user["userId"] != userId_to_delete]
     return jsonify({"code": 20000, "message": "用户删除成功"})
 
 
@@ -242,8 +263,8 @@ def delete_user():
 def find_cars_and_user():
     # 生成假数据
     data = {
-        "startedCarNum": random.randint(1, 10),
-        "stoppedCarNum": random.randint(1, 10),
+        "startedCarNum": len([car for car in cars if car["carState"] == 1]),
+        "stoppedCarNum": len([car for car in cars if car["carState"] == 0]),
         "userNum": len(users),
     }
     return jsonify({"code": 20000, "data": data})
@@ -266,37 +287,14 @@ def warning_tired_user_by_id():
 @app.route("/Car/findStoppedCars", methods=["GET"])
 def find_stopped_cars():
     # 模拟未启动车辆数据
-    stopped_cars = [
-        # 填写您的模拟车辆数据
-        {
-            "carId": 1,
-            "carPlates": "ABC123",
-            "userName": "User1",
-            "userPhone": "1234567890",
-            "carStyle": "小型车",
-            "carTude": "120.1,30.2",
-        },
-        # 其他车辆数据...
-    ]
+    stopped_cars = [car for car in cars if car["carState"] == 0]
     return jsonify({"code": 20000, "data": {"stoppedCarList": stopped_cars}})
 
 
 @app.route("/Car/findStartedCars", methods=["GET"])
 def find_started_cars():
     # 模拟已启动车辆数据
-    started_cars = [
-        # 填写您的模拟车辆数据
-        {
-            "carId": 2,
-            "carPlates": "XYZ789",
-            "userName": "User2",
-            "userPhone": "0987654321",
-            "carStyle": "大型车",
-            "carTude": "120.2,30.3",
-            "userNow": 0,
-        },
-        # 其他车辆数据...
-    ]
+    started_cars = [car for car in cars if car["carState"] == 1]
     return jsonify({"code": 20000, "data": {"startedCarList": started_cars}})
 
 
@@ -310,8 +308,10 @@ def updateUser():
     temp_user = request.args.get("userId")
     return jsonify({"code": 20000, "message": "用户修改成功"})
 
-from gevent import pywsgi;
+
+from gevent import pywsgi
+
 if __name__ == "__main__":
-    server = pywsgi.WSGIServer(('0.0.0.0', 8000), app)
+    server = pywsgi.WSGIServer(("0.0.0.0", 8000), app)
     server.serve_forever()
     # socketio.run(app, debug=True, port=8000)
