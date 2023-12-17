@@ -29,99 +29,70 @@ cars = [
         "carState": 0,  # 0未启动，1启动
         "carPlates": "浙A3N809",
         "carStyle": "小型车",
-        "userName": "User1",
-        "userId": 1,
-        "userPhone": "13158375930",
         "carCity": "City1",
-        "userAddress": "杭州市钱塘区白杨街道浙江理工大学学生生活2区",
         "carTude": "120.1,30.2",
-        "userNow": 0,  # 0疲劳驾驶,1正常
-    },
-    {
-        "carId": 2,
-        "carState": 1,  # 0未启动，1启动
-        "carPlates": "浙B8GJ65",
-        "carStyle": "大型车",
-        "userName": "User2",
-        "userId": 2,
-        "userPhone": "13285836284",
-        "carCity": "City2",
-        "userAddress": "Address2",
-        "carTude": "120.2,30.3",
-        "userNow": 0,
-    },
-    {
-        "carId": 3,
-        "carState": 1,  # 0未启动，1启动
-        "carPlates": "浙C6H975",
-        "carStyle": "中型车",
-        "userName": "User3",
-        "userId": 3,
-        "userPhone": "13385873954",
-        "carCity": "City3",
-        "userAddress": "Address3",
-        "carTude": "120.3,30.1",
-        "userNow": 1,
-    },
-    # ... 其他车辆数据
-]
-users = [
-    {
+        "userName": "张伟",
         "userId": 1,
-        "userName": "User1",
         "userPhone": "13158375930",
+        "userAddress": "浙江理工大学学生生活2区",
+        "userNow": 0,  # 0疲劳驾驶,1正常
         "userTime": "2023-01-01",
         "userScore": 8,  # 司机驾驶分
-        "userAddress": "浙江理工大学学生生活2区",
         "userAccount": "driver",
         "userPassword": "driver123456",
         "type": 1,  # 司机
-    },
-    {
-        "userId": 2,
-        "userName": "User2",
-        "userPhone": "13285836284",
-        "userTime": "2023-01-01",
-        "userScore": 12,  # 司机驾驶分
-        "userAddress": "Address2",
-        "userAccount": "driver2",
-        "userPassword": "driver123666",
-        "type": 1,  # 司机
-    },
-    {
-        "userId": 0,
-        "userName": "admin1",
-        "userPhone": "13019273638",
-        "userTime": "2013-11-11",
-        "userScore": 12,  # 初始化驾驶分数都是12，虽然对管理员没用
-        "userAddress": "Address0",
-        "userAccount": "admin",
-        "userPassword": "admin123456",
-        "type": 0,  # 管理员
-    }
-    # ... 其他用户数据
-]
-# 疲劳的表中userName和carPlates可能需要将tired表和cars表通过userId连接得到
-tired = [
-    {
-        "userId": 1,
-        "userName": "User1",
-        "carPlates": "ABC123",
         "tiredSituation": "频繁",
         "times": 2,
         "reminded": 38,
         "alltimes": 1800,
     },
     {
+        "carId": 2,
+        "carState": 1,  # 0未启动，1启动
+        "carPlates": "浙B8GJ65",
+        "carStyle": "大型车",
+        "carCity": "City2",
+        "carTude": "120.2,30.3",
+        "userName": "李明",
         "userId": 2,
-        "userName": "User2",
-        "carPlates": "DEF123",
+        "userPhone": "13285836284",
+        "userTime": "2023-03-15",
+        "userAddress": "Address2",
+        "userScore": 12,  # 司机驾驶分
+        "userAccount": "driver2",
+        "userPassword": "driver123666",
+        "type": 1,  # 司机
+        "userNow": 0,
         "tiredSituation": "偶尔",
         "times": 1,
         "reminded": 2,
         "alltimes": 500,
     },
+    {
+        "carId": 3,
+        "carState": 1,  # 0未启动，1启动
+        "carPlates": "浙C6H975",
+        "carStyle": "中型车",
+        "carTude": "120.3,30.1",
+        "carCity": "City3",
+        "userName": "陈晨",
+        "userId": 3,
+        "userScore": 12,
+        "userPhone": "13019273638",
+        "userAddress": "ADMIN",
+        "userNow": 1,
+        "userAccount": "admin",
+        "userPassword": "admin123456",
+        "type": 0,  # 管理员
+        "tiredSituation": "偶尔",
+        "times": 3,
+        "reminded": 5,
+        "alltimes": 800,
+    },
+    # ... 其他车辆数据
 ]
+users = cars
+tired = cars
 events = [
     {"eventTime": "2023-4-2 20:46", "event": "过度疲劳，被警示，扣2分"},
     {"eventTime": "2023-5-2 18:45", "event": "过度疲劳，被警示，扣2分"},
