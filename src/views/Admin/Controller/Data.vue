@@ -2,7 +2,8 @@
   <div>
     <div>
       <!--面包屑-->
-      <el-breadcrumb separator-class="el-icon-arrow-right" style="padding-left: 10px;padding-bottom: 10px;font-size: 12px">
+      <el-breadcrumb separator-class="el-icon-arrow-right"
+        style="padding-left: 10px;padding-bottom: 10px;font-size: 12px">
         <el-breadcrumb-item :to="{ path: '/adminmain' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>监控中心</el-breadcrumb-item>
         <el-breadcrumb-item>实时数据</el-breadcrumb-item>
@@ -10,7 +11,7 @@
     </div>
 
     <!--司机基础信息卡片-->
-    <el-card class="box-card" >
+    <el-card class="box-card">
       <!--用户司机信息表格-->
       <el-table max-height="369px" :data="userList" border style="width: 100%">
         <el-table-column prop="userId" label="用户编号" width="80"></el-table-column>
@@ -34,15 +35,9 @@
       <!--分页功能-->
       <div class="block">
         <span class="demonstration"></span>
-        <el-pagination
-          style="padding-top: 20px"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="current"
-          :page-sizes="[2, 6, 10, 20]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total">
+        <el-pagination style="padding-top: 20px" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :current-page="current" :page-sizes="[2, 6, 10, 20]" :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
       </div>
     </el-card>
@@ -53,7 +48,7 @@
         <el-form-item label="用户编号">
           <el-input v-model="editForm.userId" disabled></el-input>
         </el-form-item>
-        <el-form-item label="姓名" >
+        <el-form-item label="姓名">
           <el-input v-model="editForm.userName" disabled></el-input>
         </el-form-item>
         <el-form-item label="手机号码">
@@ -63,7 +58,7 @@
           <el-input v-model="editForm.userScore" disabled></el-input>
         </el-form-item>
         <el-form-item label="本次扣分">
-          <el-input v-model="editForm.changePoints" ></el-input>
+          <el-input v-model="editForm.changePoints"></el-input>
         </el-form-item>
         <el-form-item label="扣分原因">
           <el-input v-model="editForm.reason"></el-input>
@@ -76,7 +71,6 @@
     </el-dialog>
 
   </div>
-
 </template>
 
 <script>
@@ -85,7 +79,7 @@ import { warningtiredUserById, getUserById, editUser } from '@/api/driver'
 
 export default {
   name: 'AdminData',
-  data () {
+  data() {
     return {
       userList: [],
       pageSize: 6,
@@ -104,13 +98,13 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     // 创建组件的时候调用查询所有车辆的方法
     this.getUserTired()
     this.userList = this.userList.filter(user => user.type !== 0);
   },
   methods: {
-    async getUserTired () {
+    async getUserTired() {
       const { data } = await findUserTired(this.current, this.pageSize)
       console.log(data.data.UserAll)
       this.total = data.data.total
@@ -118,19 +112,19 @@ export default {
       console.log('current:' + data.data.current)
       console.log('total:' + data.data.total)
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
       // 将val赋值给size
       this.pageSize = val
       // 重新从后台查询数据
       this.getUserTired()
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
       this.current = val
       this.getUserTired()
     },
-    async warningClick (userId) {
+    async warningClick(userId) {
       // 弹框提示
       // eslint-disable-next-line no-unused-vars
       const confirmResult = await this.$confirm('是否提醒该用户疲劳驾驶?', '警示', {
@@ -155,7 +149,7 @@ export default {
       this.getUserTired()
     },
     // 展示扣分的对话框
-    async showEditDialog (userId) {
+    async showEditDialog(userId) {
       // eslint-disable-next-line no-unused-vars
       const { data } = await getUserById(userId)
       console.log(data.data)
@@ -166,14 +160,14 @@ export default {
       this.editDialogVisible = true
     },
     // 监听扣分对话框的关闭事件
-    editDialogClosed () {
+    editDialogClosed() {
       // eslint-disable-next-line no-unused-expressions
       this.$refs.editFormRef.resetFields()
     },
     // 扣分并提交
-    editUserInfo () {
+    editUserInfo() {
       this.$refs.editFormRef.validate(async valid => {
-        console.log(123456,this.editForm.changePoints,this.editForm.reason)
+        console.log(123456, this.editForm.changePoints, this.editForm.reason)
         if (!valid) return
         const { data } = await editUser(this.editForm.userId, this.editForm.changePoints, this.editForm.reason)
         if (data.code !== 20000 || !this.editForm.changePoints || !this.editForm.reason) {
@@ -189,35 +183,43 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.data-show-container{
-  .chartComponent{
+.data-show-container {
+  .chartComponent {
     margin: 20px;
     background: #1d344d;
-    .el-header{
+
+    .el-header {
       text-align: left;
     }
   }
-  .left-container{
+
+  .left-container {
     float: left;
     width: 500px;
-    .categoryChart{
+
+    .categoryChart {
       color: #ffffff;
     }
   }
-  .middle-container{
+
+  .middle-container {
     float: left;
     width: calc(100vw - 1020px);
-    .radialChart{
+
+    .radialChart {
       color: #ffffff;
     }
-    .chinaSdkMap{
+
+    .chinaSdkMap {
       color: #ffffff;
     }
   }
-  .right-container{
+
+  .right-container {
     float: left;
     width: 500px;
-    .circleLineChart{
+
+    .circleLineChart {
       color: #ffffff;
     }
   }
