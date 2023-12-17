@@ -60,8 +60,8 @@ export const editUser = (userId, userScore, reason) => {
 export const deleteUser = (userId) => {
   return request({
     url: '/User/common/deleteUser',
-    method: 'get',
-    params: {
+    method: 'POST',
+    data: {
       userId
     }
   })

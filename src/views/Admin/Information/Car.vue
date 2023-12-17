@@ -12,7 +12,7 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-row type="flex" justify="start">
           <el-form-item label="城市" style="margin-left: 10px">
-            <el-select v-model="formInline.city" placeholder="请选择">
+            <el-select v-model="formInline.city" clearable placeholder="请选择">
               <el-option
                 v-for="item in carCityAndCount"
                 :key="item.carCity"
@@ -125,23 +125,14 @@ export default {
       current: 1,
       carCityAndCount: [],
       formCar: [{
-        value: '小型客车',
-        label: '小型客车'
+        value: '小型车',
+        label: '小型车'
       }, {
-        value: '中型客车',
-        label: '中型客车'
+        value: '中型车',
+        label: '中型车'
       }, {
-        value: '大型客车',
-        label: '大型客车'
-      }, {
-        value: '小型货车',
-        label: '小型货车'
-      }, {
-        value: '中型货车',
-        label: '中型货车'
-      }, {
-        value: '大型货车',
-        label: '大型货车'
+        value: '大型车',
+        label: '大型车'
       }]
     }
   },

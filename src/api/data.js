@@ -15,3 +15,10 @@ export const findUserTired = (current, size) => {
     }
   })
 }
+
+export const videoGetUserList = () => {
+  return request({
+    url: 'url',
+    method: 'post',
+  })
+}
