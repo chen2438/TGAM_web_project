@@ -12,50 +12,22 @@
     <!--司机基础信息卡片-->
     <el-card class="box-card" >
       <!--用户司机信息表格-->
-      <el-table
-        max-height="369px"
-        :data="userList"
-        border
-        style="width: 100%">
-        <el-table-column
-          prop="userId"
-          label="用户编号"
-          width="80">
-        </el-table-column>
-        <el-table-column
-          prop="userName"
-          label="用户名"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          prop="carPlates"
-          label="当前驾驶车牌"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="tiredSituation"
-          label="十分钟（600s）内疲劳情况"
-          width="400">
-        </el-table-column>
-        <el-table-column
-          prop="times"
-          label="总疲劳次数(次/30s)"
-          width="160">
-        </el-table-column>
-        <el-table-column
-          prop="reminded"
-          label="被提醒次数"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          prop="alltimes"
-          label="驾车总时长（s）">
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          width="100">
+      <el-table max-height="369px" :data="userList" border style="width: 100%">
+        <el-table-column prop="userId" label="用户编号" width="80"></el-table-column>
+        <el-table-column prop="userName" label="用户名" width="100"></el-table-column>
+        <el-table-column prop="carPlates" label="当前驾驶车牌" width="180"></el-table-column>
+        <el-table-column prop="tiredSituation" label="十分钟（600s）内疲劳情况" width="230"></el-table-column>
+        <el-table-column prop="times" label="总疲劳次数(次/30s)" width="160"></el-table-column>
+        <el-table-column prop="reminded" label="被提醒次数" width="100"></el-table-column>
+        <el-table-column prop="alltimes" label="驾车总时长（s）" width="150"></el-table-column>
+        <el-table-column label="警示" width="100">
           <template slot-scope="scope">
-            <el-button type="warning"   @click="warningClick(scope.row.userId)">警示</el-button>
+            <el-button type="warning" @click="warningClick(scope.row.userId)">警示</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="扣分" width="100">
+          <template slot-scope="scope">
+            <el-button type="danger" @click="showEditDialog(scope.row.userId)">扣分</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -74,26 +46,62 @@
         </el-pagination>
       </div>
     </el-card>
+
+    <!--扣分的对话框-->
+    <el-dialog title="扣分" :visible.sync="editDialogVisible" width="40%" @close="editDialogClosed">
+      <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="90px">
+        <el-form-item label="用户编号">
+          <el-input v-model="editForm.userId" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" >
+          <el-input v-model="editForm.userName" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="手机号码">
+          <el-input v-model="editForm.userPhone" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="驾照分数">
+          <el-input v-model="editForm.userScore" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="本次扣分">
+          <el-input v-model="editForm.changePoints" ></el-input>
+        </el-form-item>
+        <el-form-item label="扣分原因">
+          <el-input v-model="editForm.reason"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="editUserInfo()">确定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 
 </template>
 
 <script>
 import { findUserTired } from '@/api/data'
-import { warningtiredUserById } from '@/api/driver'
+import { warningtiredUserById, getUserById, editUser } from '@/api/driver'
 
 export default {
   name: 'AdminData',
   data () {
     return {
-      // 用户集合
       userList: [],
-      // 每页显示的条数
       pageSize: 6,
-      // 总条数
       total: 200,
-      // 当前页
-      current: 1
+      current: 1,
+      editDialogVisible: false,
+      editForm: {},
+      reason: "",
+      editFormRules: {
+        changePoints: [
+          { required: true, message: '驾照所扣分数不能为空', trigger: 'blur' }
+        ],
+        reason: [
+          { required: true, message: '扣分原因不能为空', trigger: 'blur' }
+        ],
+      }
     }
   },
   created () {
@@ -145,7 +153,37 @@ export default {
       }
       this.$message.success('警示成功')
       this.getUserTired()
-    }
+    },
+    // 展示扣分的对话框
+    async showEditDialog (userId) {
+      // eslint-disable-next-line no-unused-vars
+      const { data } = await getUserById(userId)
+      console.log(data.data)
+      if (data.code !== 20000) {
+        return this.$message.error('查询对应数据失败！')
+      }
+      this.editForm = data.data.user
+      this.editDialogVisible = true
+    },
+    // 监听扣分对话框的关闭事件
+    editDialogClosed () {
+      // eslint-disable-next-line no-unused-expressions
+      this.$refs.editFormRef.resetFields()
+    },
+    // 扣分并提交
+    editUserInfo () {
+      this.$refs.editFormRef.validate(async valid => {
+        console.log(123456,this.editForm.changePoints,this.editForm.reason)
+        if (!valid) return
+        const { data } = await editUser(this.editForm.userId, this.editForm.changePoints, this.editForm.reason)
+        if (data.code !== 20000 || !this.editForm.changePoints || !this.editForm.reason) {
+          return this.$message.error('扣分失败')
+        }
+        this.getUserTired()
+        this.editDialogVisible = false
+        this.$message.success('扣分成功')
+      })
+    },
   }
 }
 </script>
