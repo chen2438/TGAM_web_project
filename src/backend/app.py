@@ -60,7 +60,7 @@ cars = [
         "userAddress": "Address2",
         "userScore": 12,  # 司机驾驶分
         "userAccount": "driver2",
-        "userPassword": "driver123666",
+        "userPassword": "driver123456",
         "type": 1,  # 司机
         "userNow": 0,
         "tiredSituation": "偶尔",
@@ -74,7 +74,7 @@ cars = [
         "carPlates": "浙C6H975",
         "carStyle": "中型车",
         "carTude": "120.3,30.1",
-        "carCity": "City3",
+        "carCity": "City2",
         "userName": "陈晨",
         "userId": 3,
         "userScore": 12,
@@ -169,7 +169,7 @@ def admin_register():
 @app.route("/Car/findCarCityAndCount", methods=["GET"])
 def find_car_city_and_count():
     # 生成假数据
-    data = [{"carCity": "City1", "cityCount": 5}, {"carCity": "City2", "cityCount": 3}]
+    data = [{"carCity": "City1", "cityCount": 1}, {"carCity": "City2", "cityCount": 2}]
     return jsonify({"code": 20000, "data": {"carCityAndCount": data}})
 
 
