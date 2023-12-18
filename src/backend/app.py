@@ -177,6 +177,9 @@ def find_car_city_and_count():
 def query_car_list(city=None, plates=None, style=None):
     # 这里可以添加筛选逻辑，根据请求参数过滤cars
     # 例如: city = request.args.get('carCity')
+    current = int(request.args.get("current", 1))  # 默认为第一页
+    size = int(request.args.get("size", 6))  # 默认每页显示6条数据
+    # print('current',current,',',size)
     city = request.args.get("carCity")
     plates = request.args.get("carPlates")
     style = request.args.get("carStyle")
@@ -190,6 +193,10 @@ def query_car_list(city=None, plates=None, style=None):
     if style:
         filtered_car = [item for item in filtered_car if item["carStyle"] == style]
     print("filtered_car", filtered_car)
+    # 分页
+    start_index = (current - 1) * size
+    end_index = start_index + size
+    filtered_car = filtered_car[start_index:end_index]
     return jsonify(
         {"code": 20000, "data": {"records": filtered_car, "total": len(cars)}}
     )
@@ -198,13 +205,25 @@ def query_car_list(city=None, plates=None, style=None):
 @app.route("/User/common/findUserList", methods=["GET"])
 def find_user_list():
     # 添加分页和过滤逻辑
+    global users  # 引入全局变量
+    current = int(request.args.get("current", 1))  # 默认为第一页
+    size = int(request.args.get("size", 6))  # 默认每页显示6条数据
+    print('current',current,',',size)
+    start_index = (current - 1) * size
+    end_index = start_index + size
+    users = users[start_index:end_index]
     return jsonify({"code": 20000, "data": {"records": users, "total": len(users)}})
 
 
 @app.route("/Head/findUserTired", methods=["GET"])
 def find_user_tired():
     # 添加分页和过滤逻辑
-    return jsonify({"code": 20000, "data": {"UserAll": tired, "total": len(tired)}})
+    current = int(request.args.get("current", 1))  # 默认为第一页
+    size = int(request.args.get("size", 6))  # 默认每页显示6条数据
+    start_index = (current - 1) * size
+    end_index = start_index + size
+    filtered_tired = tired[start_index:end_index]
+    return jsonify({"code": 20000, "data": {"UserAll": filtered_tired, "total": len(tired)}})
 
 
 @app.route("/User/common/getUserById", methods=["GET"])
@@ -214,10 +233,24 @@ def get_user_by_id():
     return jsonify({"code": 20000, "data": {"user": user}})
 
 
-@app.route("/User/common/editUser", methods=["GET"])
+@app.route("/User/common/editUser", methods=["POST"])
 def edit_user():
     # 这里应该是POST请求，用于更新用户信息
     # 在这里只返回成功信息
+    global users
+    userId = request.args.get("userId")
+    changePoints = request.args.get("changePoints")
+    reason = request.args.get("reason")
+    for u in users:
+        if u['userId'] == int(userId):
+            u['userScore'] = u['userScore']-int(changePoints)
+            u['reminded'] +=1
+            print('score',u['userScore'])
+            break
+    eventReason = reason+"，被警示，扣"+changePoints+"分"
+    newEvent = {"eventTime": datetime.now().date().strftime("%Y-%m-%d"), "event": eventReason},
+    events.append(newEvent)
+    # print(events)
     return jsonify({"code": 20000, "message": "用户信息更新成功"})
 
 
