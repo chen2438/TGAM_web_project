@@ -27,7 +27,7 @@
           </div>
         </el-form-item>
 
-
+        
         <el-form-item class="login_btn" style="white-space: pre;">
           <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
           <el-button @click="resetForm('loginForm')">重置</el-button>
@@ -40,21 +40,17 @@
 </template>
 
 <script>
-// 从 admin API 文件中导入 accountLogin 方法，用于登录请求
 import { accountLogin } from '@/api/admin'
-
 export default {
-  name: 'Login',  // 组件名称
+  name: 'Login',
   data() {
     return {
-      // 登录表单的数据模型
       loginForm: {
-        account: '',     // 用户账号
-        password: '',    // 登录密码
-        verifyCode: '',  // 验证码
-        sessionid: null, // 会话ID
+        account: '',
+        password: '',
+        verifyCode: '',
+        sessionid: null,
       },
-      // 登录表单的验证规则
       loginRules: {
         admin: [
           { required: true, message: '请输入登录用户名', trigger: 'blur' },
@@ -71,43 +67,36 @@ export default {
     }
   },
   methods: {
-    // 提交登录表单的方法
     submitForm(loginForm) {
-      // 使用Element UI的表单验证
+      // eslint-disable-next-line no-unused-expressions
       this.$refs[loginForm].validate(valid => {
         if (!valid) {
-          // 表单验证未通过时的提示信息
           this.$message({
             message: '请完整输入',
             type: 'warning',
             duration: 1200
           })
+          
           return false
         }
       })
-      // 调用登录请求方法
       this.getadminLogin()
+      // 获取admin的信息
+
+
     },
-    // 重置登录表单的方法
     resetForm(formName) {
-      // 重置表单字段
       this.$refs[formName].resetFields()
     },
-    // 异步方法，执行登录请求
     async getadminLogin() {
-      // 发送登录请求，等待结果
       const { data } = await accountLogin(this.loginForm.account, this.loginForm.password)
-      // 打印响应数据
-      console.log(data)
-      // 将token、shop数据和sessionid存储到Vuex
+      // console.log(data)
       this.$store.commit('getToken', data.data.token)
       this.$store.commit('getData', data.data.shop)
       this.$store.commit('getId', data.data.sessionid)
-      // 打印存储到Vuex的数据
-      console.log(this.$store.state.token)
-      console.log(this.$store.state.data)
-      console.log(this.$store.state.sessionid)
-      // 根据响应数据判断登录状态，并显示对应的提示消息
+      // console.log(this.$store.state.token)
+      // console.log(this.$store.state.data)
+      // console.log(this.$store.state.sessionid)
       if (data.code === 4001) {
         this.$message({
           message: '用户名不存在',
@@ -121,17 +110,24 @@ export default {
           duration: 2000
         })
       } else if (data.code === 20000 && data.data.type === 0) {
-        // 管理员登录成功，跳转到管理员主界面
+        this.$cookies.set('adminseessionid',data.data.sessionid)
+
         this.$message({
           message: '登录成功',
           type: 'success',
           duration: 2000,
           onClose: () => {
-            this.$router.push('/Adminmain')
+          this.$router.push('/Adminmain')
           }
         })
-      } else if (data.code === 20000 && data.data.type === 1) {
-        // 普通用户登录成功，跳转到用户主界面
+       } else if(data.code === 20000 && data.data.type === 1){
+        // 不用store中的sessionid，页面刷新数据就会丢失，用cookies
+        this.$cookies.set('usersessionid',data.data.sessionid)
+        this.$cookies.set('userName',data.data.userName)
+        this.$cookies.set('userAccount',data.data.userAccount)
+        this.$cookies.set('carPlates',data.data.carPlates)
+        console.log(data.data.sessionid)
+        console.log(this.$cookies.get('usersessionid'))
         this.$message({
           message: '登录成功',
           type: 'success',
@@ -145,7 +141,6 @@ export default {
   }
 }
 </script>
-
 
 <style lang="less" scoped>
 .title {
@@ -204,7 +199,6 @@ export default {
       display: flex;
       justify-content: flex-end;
     }
-
     .tip-color {
       color: #708090;
     }
@@ -239,5 +233,4 @@ export default {
   background-size: 100% 770px;
   overflow: hidden;
   height: 100%;
-}
-</style>
+}</style>

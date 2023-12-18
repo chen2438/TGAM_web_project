@@ -15,7 +15,25 @@ export const findUserTired = (current, size) => {
     }
   })
 }
-
+export const updateDiatance = (curlocat_x,curlocat_y) => {
+  return request({
+    url: '/Userhost/updatedist',
+    method: 'get',
+    params:{
+      curlocat_x,
+      curlocat_y
+    }
+  })
+}
+export const updateVideo = (status) => {
+  return request({
+    url: '/User/updatevideo',
+    method: 'get',
+    params:{
+      status
+    }
+  })
+}
 export const videoGetUserList = () => {
   return request({
     url: 'url',

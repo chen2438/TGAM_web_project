@@ -1,218 +1,176 @@
 <template>
-  <div class="page">
-      <div class="nav">
-          <div class="nav-item">
-              <!-- <img src="../assets/gshx-nav.png" /> -->
-              <button @click="change(0)" :class="{ newStyle: 0 === number }">高山滑雪</button>
-          </div>
-          <div class="nav-item">
-              <!-- <img src="../assets/hylb-nav.png" /> -->
-              <button @click="change(1)" :class="{ newStyle: 1 === number }">花样滑冰</button>
-          </div>
-          <div class="nav-item">
-              <!-- <img src="../assets/ddsh-nav.png" /> -->
-              <button @click="change(2)" :class="{ newStyle: 2 === number }">短道速滑</button>
-          </div>
-          <div class="nav-item">
-              <!-- <img src="../assets/xq.png" /> -->
-              <button @click="change(3)" :class="{ newStyle: 3 === number }">钢架雪车</button>
-          </div>
-          <div class="nav-item">
-              <!-- <img src="../assets/djlx.png" /> -->
-              <button @click="change(4)" :class="{ newStyle: 4 === number }">冬季两项</button>
-          </div>
-          <div class="nav-item">
-              <!-- <img src="../assets/xqiao.png" /> -->
-              <button @click="change(4)" :class="{ newStyle: 4 === number }">雪橇</button>
-          </div>
-          <div class="nav-item">
-              <!-- <img src="../assets/dbhx.png" /> -->
-              <button @click="change(4)" :class="{ newStyle: 4 === number }">单板滑雪</button>
-          </div>
-          <div class="nav-item">
-              <!-- <img src="../assets/dbhx.png" /> -->
-              <button @click="change(4)" :class="{ newStyle: 4 === number }">...</button>
-          </div>
+    <div>
+        <el-container>
+            <el-header>
+                <el-col>
+                    <el-card shadow="always" style="text-align: center;font-weight: 800; font-size: larger;">
+                        <img src="../../../assets/img/center.png" alt="" style="float: left; margin-left: 50px;">
+                        <p>普通路莫逆行，人行横道请避行，机动高速不龟行。</p>
+                        <p>校客危定检安，遇见校车超规让，故障停车灯标亮。</p>
+                        <p>不加塞不接打，货车休息四百二，城高路上不偏道。</p>
+                    </el-card>
+                </el-col>
+            </el-header>
+            <el-container>
+                <el-aside width="300px" style="margin-top: 130px;">
+                    <div style=" margin-left: 22px; margin-top: 30px;">
+                        <el-collapse v-model="activeNames" accordion>
+                            <el-collapse-item title="超员扣分" name="1">
+                                <div class="block">
+                                    <el-timeline>
+                                        <el-timeline-item color=rgb(121,61,41)>
+                                            <p style="font-weight: 1000;">12分</p>驾驶校车、公路客运汽车、旅游客运汽车：超员 > 20%<br>驾驶其他载客汽车： 超员
+                                            >
+                                            100%
+                                        </el-timeline-item>
+                                        <el-timeline-item color=rgb(121,61,41)>
+                                            <p style="font-weight: 1000;">9分</p>驾驶7座以上载客汽车： 50% &lt; 超员 &lt; 100%
+                                        </el-timeline-item>
+                                        <el-timeline-item color=rgb(121,61,41)>
+                                            <p style="font-weight: 1000;">6分</p>驾驶校车、公路客运汽车、旅游客运汽车：0 &lt; 超员 &lt; 20%<br>
+                                            驾驶7座以上载客汽车：
+                                            20% &lt; 超员 &lt; 50%<br> 驾驶其他载客汽车： 50% &lt; 超员 &lt; 100%
+                                        </el-timeline-item>
+                                        <el-timeline-item color=rgb(121,61,41)>
+                                            <p style="font-weight: 1000;">3分</p>驾驶其他载客汽车：20% &lt; 超员 &lt; 50%
+                                        </el-timeline-item>
+                                    </el-timeline>
+                                </div>
+                            </el-collapse-item>
+                            <el-collapse-item title="超速扣分" name="2">
+                                <div class="block">
+                                    <el-timeline :reverse="reverse">
+                                        <el-timeline-item color=rgb(121,61,41)>
+                                            <p style="font-weight: 1000;">12分</p>驾驶校车、中型以上载客载货汽车、危险物品运输车辆：高速、城市快速: 20% &lt;
+                                            超速
+                                            <br>驾驶其他机动车：高速、城市快速： 50% &lt; 超速
+                                        </el-timeline-item>
+                                        <el-timeline-item color=rgb(121,61,41)>
+                                            <p style="font-weight: 1000;">9分</p>驾驶校车、中型以上载客载货汽车、危险物品运输车辆：高速、城市快速以外: 50% &lt;
+                                            超速
+                                        </el-timeline-item>
+                                        <el-timeline-item color=rgb(121,61,41)>
+                                            <p style="font-weight: 1000;">6分</p>驾驶校车、中型以上载客载货汽车、危险物品运输车辆：高速、城市快速以外: 20% &lt;
+                                            超速
+                                            &lt;
+                                            50%<br> 驾驶其他机动车：高速、城市快速以外： 50% &lt; 超速
+                                        </el-timeline-item>
+                                        <el-timeline-item color=rgb(121,61,41)>
+                                            <p style="font-weight: 1000;">1分</p>驾驶校车、中型以上载客载货汽车、危险物品运输车辆：高速、城市快速以外: 0 &lt;
+                                            超速
+                                            &lt; 20%
+                                        </el-timeline-item>
+                                    </el-timeline>
+                                </div>
+                            </el-collapse-item>
+                        </el-collapse>
+                    </div>
+                </el-aside>
+                <el-main style="margin-top: 130px;">
+                    <el-tabs type="border-card" stretch="true" style="border-radius: 4px">
+                        <el-tab-pane label="驾照更新">
+                            <h1>（一）在工作日内，携带身份证、驾驶证原件及复印件1份到所属地交警部门办理换证。</h1>
 
+                            　　<p>1、根据办理大厅具体情况，排队或排号机上点击屏幕拿号；</p>
 
+                            　　<p>2、填写“机动车驾驶证申请表”（办理过程中会自动生成，完成体检项目后签字即可）；</p>
 
-      </div>
-      <div class="content">
-          <div class="item" v-show="0 === number">
-              <div class="title">
-                  高山滑雪
-              </div>
-              <div class="details">
-                  <div class="text">
-                      <div class="sub">
-                          <!-- <img src="../assets/gshx.png" /> -->
-                          <span>项目介绍</span>
-                      </div>
-                      <p>高山滑雪（Alpine Skiing）是以滑雪板、雪鞋、固定器和滑雪杖为主要用具，从山上向山下，沿着旗门设定的赛道滑下的雪上竞速运动项目。奥运会高山滑雪设男子项目、女子项目、混合项目。其中，男子项目和女子项目各设滑降、回转、大回转、超级大回转、全能5个小项，混合项目则为混合团体赛。其中，滑降和超级大回转属速度项目，按一次滑行成绩决出名次。回转和大回转属技术项目，以两次滑行成绩合计计算。</p>
-                      <div class="sub">
-                          <!-- <img src="../assets/gshx.png" /> -->
-                          <span>项目规则</span>
-                      </div>
-                      <p>在高山滑雪比赛中，选手滑行速度可以超过130公里/小时，不同项目起点与终点的垂直高度差亦有不同：速降男子800-1100米，女子500-800米；回转男子180-220米，女子140-200米；大回转男子250-450米，女子250-400米；超大回转男子500-650米，女子400-600米。</p>
-                      <p>这些垂直高度差让比赛更加艰难，因为选手在滑下来的同时需要穿越设置在滑行路线上的一系列的旗门，如果有选手错过了一个旗门，那么他就必须回去重新穿越这个错过的旗门，否则他就丧失比赛资格。</p>
-                      <p>高山滑雪的每个项目比赛均采用单人出发，出发的顺序通过抽签决定，但有的项目需要滑两次，第二次出发的顺序由由第一次比赛的成绩确定。出发的间隔一般为60秒，只有回转项目采用不等时出发。出发时，运动员必须身穿经正式铅封标志的运动服（即经裁判员检查并认可的服装），佩戴出发号码布，头戴护盔，脚穿滑雪板，手持滑雪杖，同时必须使用脱离式固定器。</p>
-                  </div>
-                  <div class="image">
-                      <!-- <img style="border: 3px solid #3889a8 ;border-radius: 20px;" src="../assets/gshx01.png" /> -->
-                  </div>
-              </div>
-          </div>
-          <div class="item" v-show="1 === number">
-              <div class="title">
-                  <h1>花样滑冰</h1>
-              </div>
-              <div class="details">
-                  <div class="text">
-                      <div class="sub">
-                          <!-- <img src="../assets/hyhb.png" /> -->
-                          <span>项目介绍</span>
-                      </div>
-                      <p>花样滑冰（Figure Skating）是冰上运动项目之一。运动员通过冰刀在冰面上划出图形，并表演跳跃、旋转等高难度动作。花样滑冰的裁判会按照动作的质量与艺术性表现进行综合评分，最高为6分。</p>
-                      <div class="sub">
-                          <!-- <img src="../assets/hyhb.png" /> -->
-                          <span>项目规则</span>
-                      </div>
-                      <p>冬奥会和世界锦标赛参赛名额由上一年度世界锦标赛的成绩根据国际滑联的相关规定进行计算确定，但每个国家和地区每项最多可参加3人（对）。所有项目必须分别进行。男、女单人和双人各包括有短节目，自由滑和表演自由滑3项内容，冬奥会和世界锦标赛只规定有短节目和自由滑。每项内容各进行1天，短节目在先。</p>
-                      <p>短节目由规定的3种不同跳跃、3种不同旋转和2种不同步法共8个动作和连接步组成。运动员自选音乐，根据要求编排一套不超过2分40秒的节目。评分包括规定动作分和表演分。裁判员依据动作质量，难度和完成情况先评出规定动作分，然后根据内容编排的均衡性和音乐的一致性、速度、姿势以及音乐特点表达等再出示第二个分——表演分。</p>
-                      <p>自由滑是由跳跃、旋转、步法和各种姿势组成。运动员自选音乐，根据规则编排一套均衡内容的节目。自由滑比赛的时间男子单人和双人为4分30秒，女子单人4分钟。自由滑评分包括技术水平分和表演分。</p>
-                      <p>表演自由滑是由规定数量的跳跃﹑旋转和步法组成。节目主要突出音乐的表达和艺术表演。其评分包括滑行技术分和表演分。比赛时间为3分30秒至4分30秒。</p>
-                      <p>冰上舞蹈比赛由规定舞、创编舞、自由舞和表演舞4项内容组成。冬奥会和世界锦标赛只进行3项，分别在3天进行。第1天为规定舞，第2天创编舞。规定舞是根据规定的音乐、图案、步法和重复次数进行比赛。规定舞共有22种，每次比赛滑其中的2种。冰上舞蹈的评分包括技术分和节奏/表演分。</p>
-                  </div>
-                  <div class="image">
-                      <!-- <img style="border: 3px solid #3889a8 ;border-radius: 20px;" src="../assets/hyhb01.png" /> -->
-                  </div>
-              </div>
-          </div>
-          <div class="item" v-show="2 === number">
-              <div class="title">
-                  <h1>短道速滑</h1>
-              </div>
-              <div class="details">
-                  <div class="text">
-                      <div class="sub">
-                          <!-- <img src="../assets/sdhb.png" /> -->
-                          <span>项目介绍</span>
-                      </div>
-                      <p>高山滑雪（Alpine Skiing）是以滑雪板、雪鞋、固定器和滑雪杖为主要用具，从山上向山下，沿着旗门设定的赛道滑下的雪上竞速运动项目。奥运会高山滑雪设男子项目、女子项目、混合项目。其中，男子项目和女子项目各设滑降、回转、大回转、超级大回转、全能5个小项，混合项目则为混合团体赛。其中，滑降和超级大回转属速度项目，按一次滑行成绩决出名次。回转和大回转属技术项目，以两次滑行成绩合计计算。</p>
-                      <div class="sub">
-                          <!-- <img src="../assets/sdhb.png" /> -->
-                          <span>项目规则</span>
-                      </div>
-                      <p>在高山滑雪比赛中，选手滑行速度可以超过130公里/小时，不同项目起点与终点的垂直高度差亦有不同：速降男子800-1100米，女子500-800米；回转男子180-220米，女子140-200米；大回转男子250-450米，女子250-400米；超大回转男子500-650米，女子400-600米。</p>
-                      <p>这些垂直高度差让比赛更加艰难，因为选手在滑下来的同时需要穿越设置在滑行路线上的一系列的旗门，如果有选手错过了一个旗门，那么他就必须回去重新穿越这个错过的旗门，否则他就丧失比赛资格。</p>
-                      <p>高山滑雪的每个项目比赛均采用单人出发，出发的顺序通过抽签决定，但有的项目需要滑两次，第二次出发的顺序由由第一次比赛的成绩确定。出发的间隔一般为60秒，只有回转项目采用不等时出发。出发时，运动员必须身穿经正式铅封标志的运动服（即经裁判员检查并认可的服装），佩戴出发号码布，头戴护盔，脚穿滑雪板，手持滑雪杖，同时必须使用脱离式固定器。</p>
-                  </div>
-                  <div class="image">
-                      <!-- <img style="border: 3px solid #3889a8 ;border-radius: 20px;" src="../assets/sdhb01.png" /> -->
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-</template>
-<script>
-export default {
-  name: 'Introduce',
-  data() {
-      return {
-          number: 0,
+                            　　<p>3、在办理窗口出示证件，工作人员会核对你的证件档案，扣分情况等，如无异常，就会指示你到另一窗口或场所进行一系列办证手续。</p>
+                            <h1>（二）一系列办证手续按工作人员指示进行，一般开始前先缴纳费用。</h1>
+
+                            　　<p>1、复印：如上所述，自己有复印来就不用了，交给工作人员就是了；</p>
+
+                            　　<p>2、拍照：为工作人员给你现场拍照，会马上打印照片1寸头像照1组出来，取1张用于新驾驶证，余下记得带走。</p>
+
+                            　　<p>3、体检：为简易体检，花不了几分钟，具体要求你看视力表、看色图、听力等，项目具体看当地要求。</p>
+
+                            　　<p>4、以上做完后，会形成一张”机动车驾驶人身体条件证明“。</p>
+                            <h1>（三）完成上述项目后，回到原办理窗口进行总签，工作人员会要求你在“机动车驾驶证申请表”进行签字确认，收取你10元工本费，打印新驾驶证给你，我们的换证工作即告完成。</h1>
+                            　　<h1>（四）不可以直接在异地换驾驶证。可以转到现居住地，再一起办理换证业务。一定要在过期前去办理，过期后的话就只能回驾驶证领证地办理。</h1>
+
+                            　　<h1>（五）根据《机动车驾驶证申领和使用规定》：机动车驾驶人可以委托代理人代理机动车驾驶证的换证、补证、提交身体条件证明、延期办理和注销业务。</h1>
+                        </el-tab-pane>
+                        <el-tab-pane label="道路标志">
+                            <img src="../../User/R-C.jpg" alt="">
+                        </el-tab-pane>
+                        <el-tab-pane label="行车规范">
+                            <p>(一)驾驶人员要经常观察和检查各种仪一有和报警装置通过觉察异味，及查明油路电路、传运装置、离合装置有无故障，发现异常现象应及时排除或处理</p>
+                            <p>(二)驾驶人员要经常对车辆团里行检查，特别是长途行车，要注意检查灯光、转向、制动及轮胎磨损程度</p>
+                            <p>(三)严禁酒后驾车，包括含酒精的饮料。</p>
+                            <p>(四)长途行车要防止疲劳驾驶，出现打瞌睡现象及时停车休息，待精神恢复后再行车</p>
+                            <p>(五)严禁强行超车、超速行驶，保持安全车距。防止追尾事故和爆胎事故的发生</p>
+                            <p>(六)严格遵p守高速公路行车规定，严禁超载、超重、超宽、超高行驶</p>
+                            <p>(七)冬季冰雪路面行车，保持安全车速车距。注意防冻及润滑油的加注或质量状况</p>
+                            <p>(八)对车辆门锁及防盗装置应经常检查，防止车辆被盗事件的发生。车内严禁存放箱包等物品，如需存放，驾驶员不得离车。</p>
+                            <p>(九)行车时要集中注意力，眼观六路、耳听八方，宁停三分，不抢一秒，确保行车安全</p>
+                            <p>(十)正确估计自己的驾驶技术，防止骄傲自满情绪。严禁开“赌气车”、“英雄车”、“情绪礼貌行车、谦让行车。</p>
+                        </el-tab-pane>
+                        <el-tab-pane label="违法行为处罚">
+                            　<h1>一、超速行驶</h1>
+
+                            　　<p style="text-indent: 2em;">
+                                限速路段是根据道路设计、车流量和事故多发等因素综合考虑确定的，一般设置在市区道路通行环境较好、弯道或事故多发路段，且限速的两端公路边都设立了明显的限速标志和前方测速标志，当您驾车经过发现有限速标志路段时，就要控制好车速，按规定速度行驶，否则的话，您就可能会因超速而被抓拍。
+                            </p>
+
+                            　　<p style="text-indent: 2em;">
+                                怎么处罚：机动车行驶超过规定时速50%以下的，罚款100元，记3分;在高速公路以外的道路上，驾驶机动车超过规定时速50%以上80%以下罚款200元，记6分、超过规定时速80%以上100%以下罚款500元记6分;超过规定时速100%以上罚款1000元记6分。
+                            </p>
+
+                            　　<h1>二、违规变道</h1>
+
+                            　　<p style="text-indent: 2em;">
+                                目前，有信号灯的路口基本上划分有直行车道、左转弯车道和右转弯车道。车辆进入划分的车道后，就不允许变更车道了。万一开错车道了，也不能随意变更或在路内转弯，需按导向车道要求向前行驶，在允许掉头路口再调整。
+                            </p>
+
+                            　　<p style="text-indent: 2em;">
+                                怎么处罚：机动车不按规定车道行驶的，罚款100元;在禁止掉头或禁止左转弯标志、标线的地点掉头的罚款200元;机动车通过有灯控路口时，不按所需行进方向驶入导向车道的，罚款100元，记2分。
+                            </p>
+
+                            　　<h1>三、闯红灯</h1>
+
+                            　　<p style="text-indent: 2em;">
+                                驾驶员闯红灯的原因主要有思想不集中、犹豫不决、心中存有侥幸加速或强行通过而闯红灯。另外，一些人认为黄灯亮时还可以通行。《中华人民共和国道路交通安全法》规定：黄灯亮时，已经越过停止线的车辆可以继续通行，没有越过停止线的禁止通行。
+                            </p>
+
+                            　　<p style="text-indent: 2em;">怎么处罚：机动车不按交通信号灯规定通行的，罚款100元，记3分。</p>
+
+                            　　<h1>四、逆向行驶</h1>
+
+                            　　<p style="text-indent: 2em;">
+                                从被拍的违法记录中发现，逆向行驶被抓拍的基本上是在等候信号灯或刚开始放行，有些心急的驾驶员没等前方车辆起步，就直接压在中心线上或越过中心双实线，驶上左侧对向车道超车;有的驾驶人左转弯时没有紧靠路口的中心点转弯，而是越过停止线后直接转弯，导致在进入路口时驶上中心线的左侧车道而被抓拍。还有的驾驶人为图方便，直接从非机动车道上或机动车道边逆向行驶，导致过往车辆纷纷避让，容易引起交通秩序混乱。
+                            </p>
+
+                            　　<p style="text-indent: 2em;">
+                                怎么处罚：机动车逆向行驶的，罚款200元，记3分。机动车违反禁令标志指示的，罚款100元，记2分;机动车违反禁止标线指示的，罚款100元，记2分。</p>
+
+                            　　<h1>五、违章泊车</h1>
+
+                            　　<p style="text-indent: 2em;">
+                                如果在主城区内乱停乱放车辆，特别是在路口、人行横道线等路段停车，“电子眼”随时会抓拍到你的违章行为。因此，驾驶员驾车外出时应充分考虑停车问题，宁愿多走几步路，也要将车停在允许停车的停车场或停车泊位上，千万不要侥幸。
+                            </p>
+
+                            　　<p style="text-indent: 2em;">
+                                怎么处罚：违反机动车停放、临时停车规定且驾驶人不在现场，妨碍其他车辆、行人通行的罚款100元;违反机动车停放、临时停车规定且拒绝立即行驶，妨碍其他车辆、行人通行的，罚款200元。
+                            </p>
+                        </el-tab-pane>
+                    </el-tabs>
+
+            </el-main>
+        </el-container>
+    </el-container>
+</div></template>
+  
+  
+  <script>
+    export default {
+      data() {
+        return {
+        activeNames: ['1']
+      };
       }
-  },
-  methods: {
-      change: function (index) {
-          this.number = index;
-      },
-  },
+    };
+  </script>
+  <style scoped>
 
-}
-</script>
-<style scoped>
-.page {
-  padding: 0 2px;
-  display: flex;
-  margin-top: 20px;
-  width: 100%;
-  font-size: 20px;
-}
-.nav {
-  width: 10%;
-  height: 400px;
-  display: inline-block;
-  margin: 20px 0 0 40px;
-  font-size: 25px;
-}
-.nav-item {
-  width: 140px;
-  height: 80px;
-  padding: 2px;
-  display: flex;
-  border: 2px #c0c4cc solid;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
-}
-.nav-item img {
-  width: 70px;
-  height: 70px;
-}
-.nav-item button {
-  margin: 0;
-  padding: 0;
-  border: 1px solid transparent;
-  outline: none;
-  background-color: #fff;
-  font-size: 15px;
-  color: grey;
-}
-.nav-item button:focus {
-  color: black;
-}
-.title {
-  left: 20px;
-  font-size: 35px;
-}
-.item {
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-}
-.details {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  margin: 10px 10px 10px 10px;
-}
-.text {
-  width: 85%;
-  height: 500px;
-  border: 5px solid #3889a8;
-  border-radius: 11px;
-  overflow: auto;
-  margin-right: 40px;
-}
-.text .sub {
-  width: 30%;
-  height: 30px;
-  font-size: 15px;
-  color: #3889a8;
-  padding: 20px;
-}
-p {
-  text-align: justify;
-  text-indent: 2rem;
-}
-.sub img {
-  width: 30px;
-  height: 30px;
-}
-.content .item .image > img{
-  width: 400px;
-  height: 500px;
-  padding: 5px;
-
-}
-</style>
+  </style>
+  

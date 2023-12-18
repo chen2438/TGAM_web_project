@@ -14,16 +14,43 @@
         max-height="369px"
         :data="userList"
         border
+        :header-cell-style="{'text-align':'center'}"
+        :cell-style="{'text-align':'center'}"
         style="width: 100%">
-        <el-table-column prop="userId" label="用户编号" width="100"></el-table-column>
-        <el-table-column prop="userName" label="姓名" width="150"></el-table-column>
-        <el-table-column prop="userPhone" label="用户电话" width="200"></el-table-column>
-        <el-table-column prop="userTime" label="注册时间" width="200"></el-table-column>
-        <el-table-column prop="userScore" label="司机驾驶分" width="150"></el-table-column>
-        <el-table-column prop="userAddress" label="家庭地址"></el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column
+          prop="userId"
+          label="用户编号"
+          width="100">
+        </el-table-column>
+        <el-table-column
+          prop="userName"
+          label="姓名"
+          width="150">
+        </el-table-column>
+        <el-table-column
+          prop="userPhone"
+          label="用户电话"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          prop="userTime"
+          label="注册时间"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          prop="userScore"
+          label="司机驾驶分"
+          width="150">
+        </el-table-column>
+        <el-table-column
+          prop="userAddress"
+          label="家庭地址">
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          width="180">
           <template slot-scope="scope">
-            <!-- <el-button type="primary" size="mini" icon="el-icon-edit" @click="showEditDialog(scope.row.userId)"></el-button> -->
+            <el-button type="primary" size="mini" icon="el-icon-edit" @click="showEditDialog(scope.row.userId)"></el-button>
             <el-button type="danger" size="mini" icon="el-icon-delete" @click="removeUserById(scope.row.userId)"></el-button>
           </template>
         </el-table-column>
@@ -81,13 +108,20 @@ export default {
   name: 'AdminDriver',
   data () {
     return {
+      // 用户集合
       userList: [],
+      // 每页显示的条数
       pageSize: 6,
+      // 总条数
       total: 200,
+      // 当前页
       current: 1,
+      // 控制修改司机对话框的显示和隐藏
       editDialogVisible: false,
+      // 查询到的司机信息
       editForm: {},
       reason: "",
+      // 修改分类表单的验证规则
       editFormRules: {
         userScore: [
           { required: true, message: '驾照所扣分数不能为空', trigger: 'blur' }
@@ -180,7 +214,7 @@ export default {
       }
       // eslint-disable-next-line no-unused-vars
       const { data } = await deleteUser(userId)
-      console.log('data',data)
+      console.log(data)
       if (data.code !== 20000) {
         return this.$message.error('删除本司机信息失败')
       }

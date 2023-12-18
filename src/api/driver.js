@@ -34,19 +34,19 @@ export const getUserById = (userId) => {
 }
 
 /**
- * 管理员给司机扣分
+ * 管理员修改司机信息
  * @param userId
- * @param changePoints
- * @param reason
+ * @param userCity
+ * @param userAddress
  * @returns {AxiosPromise}
  */
 export const editUser = (userId, userScore, reason) => {
   return request({
     url: '/User/common/editUser',
-    method: 'post',
+    method: 'get',
     params: {
       userId,
-      changePoints:userScore,
+      userScore,
       reason
     }
   })
@@ -60,8 +60,8 @@ export const editUser = (userId, userScore, reason) => {
 export const deleteUser = (userId) => {
   return request({
     url: '/User/common/deleteUser',
-    method: 'POST',
-    data: {
+    method: 'get',
+    params: {
       userId
     }
   })

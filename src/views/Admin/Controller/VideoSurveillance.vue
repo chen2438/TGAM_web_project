@@ -48,7 +48,7 @@
     </div>
 </div>
 </template>
-  
+
 <script>
 import io from 'socket.io-client';
 import { warningtiredUserById } from '@/api/driver'
@@ -77,7 +77,7 @@ export default {
             const { data } = await videoGetUserList()
             console.log(data.data.UserAll)
 
-            
+
             // this.total = data.data.total
             // this.userList = data.data.UserAll
             // console.log('current:' + data.data.current)
@@ -189,7 +189,7 @@ export default {
     },
 };
 </script>
-  
+
 <style>
 .allVideo{
     width:94%;
@@ -224,7 +224,7 @@ export default {
     align-items: center;
 }
 .footer{
-    margin: 10px; 
+    margin: 10px;
     justify-items: center;
     align-items: center;
     padding: 5px;

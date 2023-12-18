@@ -1,14 +1,21 @@
 <template>
-    <div>
-      <h1 class="big" style="float: left">当前路况：用户数量:{{this.userNum}} 车辆总数:{{this.carNum}}  未启动车数量:{{this.stoppedCarNum}} 启动车数量:{{this.startedCarNum}}      </h1>
-      <Amap ref="map" @callbackComponent="callbackComponent"></Amap>
+  <div>
+    <h1 class="big" style="float: left">当前路况：用户数量:{{ this.userNum }} 车辆总数:{{ this.carNum }} 未启动车数量:{{ this.stoppedCarNum }}
+      启动车数量:{{ this.startedCarNum }} </h1>
+    <div style="float:left ; clear: both;" >
+    <el-card  style=" background-color:rgba(64, 160, 255, 0.653);">
+      <span style="font-size: larger; font-weight: 900; color: black;">最近服务区距您: {{this.dist}} </span>
+    </el-card>      
     </div>
+    <Amap ref="map" @callbackComponent="callbackComponent"></Amap>
+  </div>
 </template>
 
 <script>
 import Amap from '@/views/map/Amap'
 import { findStartedCars, findStoppedCars } from '@/api/car'
 import { findCarsAndUser,} from '@/api/driver'
+import { updateDiatance } from '../../api/data'
 export default {
   name: 'UserHost',
   components: { Amap },
@@ -18,7 +25,9 @@ export default {
       carNum: '',
       userNum: '',
       stoppedCarNum: '',
-      startedCarNum: ''
+      startedCarNum: '',
+      dist:'XXX',
+      curlocat:[]
     }
   },
   created () {
@@ -42,6 +51,8 @@ export default {
       // 定时器要执行的任务和间隔时间（毫秒）
       this.timer = setInterval(this.getStoppedCar, 5000)
       this.timer = setInterval(this.getStartedCar, 5000)
+      this.timer = setInterval(this.getDistance, 5000)
+
     },
     async getStoppedCar () {
       // eslint-disable-next-line no-unused-vars
@@ -49,9 +60,11 @@ export default {
       data.data.stoppedCarList.forEach(item => {
         // eslint-disable-next-line eqeqeq
         item.position = item.carTude.split(',')
+
         item.content = '<img src="' + require('@/assets/img/blue_car.png') + '" height="22" width="35"/>'
         // item.label = { content: item.userName + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|尚未启动', offset: [40, 0] }
-        item.text = `<div style="width:400px;color: white;background: black">${item.userName + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|尚未启动'}</div>`
+        if(item.userName == this.$cookies.get("userName")) item.text = `<div style="width:400px;color: white;background: black">${"本人" + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|尚未启动'}</div>`
+        if(item.userName != this.$cookies.get("userName")) item.text = `<div style="width:400px;color: white;background: black">${item.userName + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|尚未启动'}</div>`
         item.offset = [10, -50]
       })
       // 调用地图中的方法 获取未使用车辆 (父组件调子组件中的方法)
@@ -62,21 +75,39 @@ export default {
       const { data } = await findStartedCars()
       data.data.startedCarList.forEach(item => {
         // eslint-disable-next-line eqeqeq
-        if (item.userNow == 0) {
+        if (item.userNow == 0 && item.userName == this.$cookies.get("userName")) {
+          item.text = `<div style="width:400px;color: black;background: red">${"本人" + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|疲劳驾驶'}</div>`
+          // item.text = item.userName + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|疲劳驾驶'
+          // item.label = { content: item.userName + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|疲劳驾驶', offset: [40, 0] }
+        }else if(item.userNow == 0 && item.userName != this.$cookies.get("userName")) {
           item.text = `<div style="width:400px;color: black;background: red">${item.userName + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|疲劳驾驶'}</div>`
           // item.text = item.userName + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|疲劳驾驶'
           // item.label = { content: item.userName + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|疲劳驾驶', offset: [40, 0] }
-        } else {
+        }else if(item.userNow != 0 && item.userName == this.$cookies.get("userName")){
+          item.text = `<div style="width:400px;color: white;background: #42b983">${"本人" + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|状态正常'}</div>`
+          // item.text = item.userName + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|状态正常'
+          // item.label = { content: item.userName + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|状态正常', offset: [40, 0] }
+        }else{
           item.text = `<div style="width:400px;color: white;background: #42b983">${item.userName + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|状态正常'}</div>`
           // item.text = item.userName + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|状态正常'
           // item.label = { content: item.userName + '|' + item.userPhone + '|' + item.carStyle + '|' + item.carPlates + '|状态正常', offset: [40, 0] }
         }
         item.offset = [10, -40]
         item.position = item.carTude.split(',')
+        // eslint-disable-next-line eqeqeq
+        // 获取当前帐户司机的位置
+        if(item.userName == this.$cookies.get("userName")){this.curlocat = item.position}
         item.content = '<img src="' + require('@/assets/img/black_car.png') + '" height="50" width="45"/>'
       })
       // 调用地图中的方法 获取正在使用车辆 (父组件调子组件中的方法)
       this.$refs.map.findstartCarsData(data)
+    },
+    async getDistance(){
+      console.log(this.curlocat)
+      const response = await updateDiatance(this.curlocat[0],this.curlocat[1])
+      this.dist = response.data.curdist.toFixed(3) + 'km'
+      console.log(response)
+      console.log(this.dist)
     }
   },
   beforeDestroy: function () {
