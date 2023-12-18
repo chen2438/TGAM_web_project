@@ -21,11 +21,9 @@
                     <p>疲劳次数: 38，当前疲劳情况：眯眼3次，打哈欠5次</p>
                     {{ ' '.repeat(2) }}<br>
 
-                    <!-- 这里的警示和实时数据那里差不多好像有点多余了，先把他注释了 -->
-
-                    <!-- <template slots-scope="scope">
+                    <template slots-scope="scope">
                         <el-button size="mini" type="warning" @click="warningClick(userId)">警示</el-button>
-                    </template> -->
+                    </template>
                 </div>
             </el-card>
         </el-div>
@@ -43,9 +41,9 @@
                     <a>司机ID：2，司机姓名：李四，司机车牌：DEF123</a><br>
                     <p>疲劳次数: 2，当前疲劳情况：眯眼10次，打哈欠20次</p>
                     {{ ' '.repeat(2) }}<br>
-                    <!-- <template slots-scope="scope">
+                    <template slots-scope="scope">
                         <el-button size="mini" type="warning" @click="warningClick(userId)">警示</el-button>
-                    </template> -->
+                    </template>
                 </div>
             </el-card>
         </el-div>
@@ -63,7 +61,6 @@ import { warningtiredUserById } from '@/api/driver'
 import { videoGetUserList } from '@/api/data'
 
 // userList1={"userId":1,"driverName":"张三","plate":"ABC123"}
-
 // userList2={"userId":2,"driverName":"张三","plate":"ABC123"}
 
 export default {
@@ -73,7 +70,7 @@ export default {
             videoElement: null,
             outputElement: null,
             imageSrc: '',
-            userList1:{"userId":1,"driverName":"张三","plate":"ABC123"},
+            userList1:[],
             userList2:[],
             // status: 'Normal',
             socket: io('http://localhost:8000') // Replace with your server URL and port
@@ -87,8 +84,6 @@ export default {
         async video_getUserList () {
             const { data } = await videoGetUserList()
             console.log(data.data.UserAll)
-
-
             // this.total = data.data.total
             // this.userList = data.data.UserAll
             // console.log('current:' + data.data.current)
@@ -115,54 +110,6 @@ export default {
             this.$message.success('警示成功')
         },
     },
-
-    // startStream() {
-    //     const videoElement = this.$refs.video;
-    //     const streamUrl = '/getVideo'; // 与后端路由对应
-
-    //     if (window.MediaSource && MediaSource.isTypeSupported('video/mp4')) {
-    //     const mediaSource = new MediaSource();
-    //     videoElement.src = URL.createObjectURL(mediaSource);
-
-    //     mediaSource.addEventListener('sourceopen', () => {
-    //         const sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
-
-    //         const xhr = new XMLHttpRequest();
-    //         xhr.open('GET', streamUrl);
-    //         xhr.responseType = 'arraybuffer';
-    //         xhr.onerror = () => console.log('Error loading video stream');
-    //         xhr.onprogress = (event) => {
-    //             if (event.lengthComputable) {
-    //                 const percentComplete = (event.loaded / event.total * 100 | 0);
-    //                 console.log(`Loading video stream ${percentComplete}%`);
-    //             }
-    //         };
-    //         xhr.onload = () => {
-    //             const uint8Array = new Uint8Array(xhr.response);
-    //             let i = 0;
-
-    //             (function readChunk() {
-    //                 const length = ((uint8Array[i] << 24) | (uint8Array[i + 1] << 16) | (uint8Array[i + 2] << 8) | uint8Array[i + 3]) >>> 0;
-    //                 i += 4;
-
-    //                 if (length === 0) {
-    //                     mediaSource.endOfStream();
-    //                 } else {
-    //                     const chunk = uint8Array.subarray(i, i + length);
-    //                     i += length;
-
-    //                     sourceBuffer.appendBuffer(chunk);
-    //                     readChunk();
-    //                 }
-    //             })();
-    //         };
-    //         xhr.send();
-    //     });
-    //     } else {
-    //         console.log('Unsupported MIME type or codec: video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
-    //     }
-    // },
-
     mounted() {
         this.videoElement = this.$refs.videoElement;
         this.outputElement = this.$refs.outputElement;
@@ -200,7 +147,7 @@ export default {
         }
         this.$message.success('删除本司机信息成功')
         this.getUserList()
-        // this.userList = this.userList.filter(user => user.type !== 0);
+        // this.userList1 = this.userList1.filter(user => user.type !== 0);
         // this.total = data.data.total
         console.log(data.data)
         console.log('current:' + data.data.current)
@@ -226,8 +173,6 @@ export default {
     grid-gap: 10px;
     justify-items: center;
     align-items: center;
-    /* border: 1px solid #ccc;
-    border-radius: 10px; */
 }
 .leftVideo{
     width:94%;
@@ -236,7 +181,6 @@ export default {
     flex-direction: column;
     justify-items: center;
     align-items: center;
-    /* border: 1px solid #ccc; */
     margin-right: 16px;
 }
 .el-button {
@@ -254,25 +198,6 @@ export default {
     align-items: center;
     padding: 5px;
 }
-
-/* .rowVideo{
-    height:100%;
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 50% 50%;
-    grid-gap: 10px;
-    justify-items: center;
-    align-items: center;
-}
-.eachVideo{
-    width:80%;
-    height:auto;
-    justify-items: center;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 10px;
-} */
 
 img {
     width: 100%;
