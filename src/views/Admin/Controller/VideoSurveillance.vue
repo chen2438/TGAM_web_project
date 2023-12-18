@@ -1,52 +1,53 @@
 <template>
     <div>
-      <!--面包屑-->
-      <el-breadcrumb separator-class="el-icon-arrow-right" style="padding-left: 10px;padding-bottom: 10px;font-size: 12px">
-        <el-breadcrumb-item :to="{ path: '/adminmain' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>监控中心</el-breadcrumb-item>
-        <el-breadcrumb-item>视频监控</el-breadcrumb-item>
-      </el-breadcrumb>
-    
-      <el-div class="allVideo">
-        <el-div class="leftVideo" :data="userList1">
-            <el-card shadow="hover" style="width: 90%; margin-bottom: 20px;">
-                <video ref="videoElement" autoplay style="display: none;"></video>
-                <img :src="imageSrc1" />
-            </el-card>
-            <el-card shadow="hover" style="width: 90%; margin-bottom: 8px;">
-                <div style="padding: 14px;">
-                    <a>司机ID：{{ userId }}，司机姓名：{{ driverName }}，司机车牌：{{ plate }}</a><br>
-                    <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p>
-                    {{ ' '.repeat(2) }}<br>
-                    <template slots-scope="scope">
-                        <el-button size="mini" type="warning" @click="warningClick(userId)">警示</el-button>
-                    </template>
-                </div>
-            </el-card>
-        </el-div>
+        <!--面包屑-->
+        <el-breadcrumb separator-class="el-icon-arrow-right"
+            style="padding-left: 10px;padding-bottom: 10px;font-size: 12px">
+            <el-breadcrumb-item :to="{ path: '/adminmain' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>监控中心</el-breadcrumb-item>
+            <el-breadcrumb-item>视频监控</el-breadcrumb-item>
+        </el-breadcrumb>
 
-        <el-div class="leftVideo" :data="userList2">
-            <el-card shadow="hover" style="width: 90%; margin-bottom: 20px;">
-                <video ref="videoElement" autoplay style="display: none;"></video>
-                <img :src="imageSrc2" />
-            </el-card>
-            <el-card shadow="hover" style="width: 90%; margin-bottom: 8px;">
-                <div style="padding: 14px;">
-                    <a>司机ID：{{ userId }}，司机姓名：{{ driverName }}，司机车牌：{{ plate }}</a><br>
-                    <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p>
-                    {{ ' '.repeat(2) }}<br>
-                    <template slots-scope="scope">
-                        <el-button size="mini" type="warning" @click="warningClick(userId)">警示</el-button>
-                    </template>
-                </div>
-            </el-card>
-        </el-div>
+        <el-div class="allVideo">
+            <el-div class="leftVideo" :data="userList1">
+                <el-card shadow="hover" style="width: 90%; margin-bottom: 20px;">
+                    <video ref="videoElement" autoplay style="display: none;"></video>
+                    <img :src="imageSrc1" />
+                </el-card>
+                <el-card shadow="hover" style="width: 90%; margin-bottom: 8px;">
+                    <div style="padding: 14px;">
+                        <a>司机ID：{{ userId }}，司机姓名：{{ driverName }}，司机车牌：{{ plate }}</a><br>
+                        <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p>
+                        {{ ' '.repeat(2) }}<br>
+                        <template slots-scope="scope">
+                            <el-button size="mini" type="warning" @click="warningClick(userId)">警示</el-button>
+                        </template>
+                    </div>
+                </el-card>
+            </el-div>
 
-    </el-div>
-    <div class="footer" margin="20px" align="center">
-        <el-button type="primary" @click="refresh()">刷新下一组</el-button>
+            <el-div class="leftVideo" :data="userList2">
+                <el-card shadow="hover" style="width: 90%; margin-bottom: 20px;">
+                    <video ref="videoElement" autoplay style="display: none;"></video>
+                    <img :src="imageSrc2" />
+                </el-card>
+                <el-card shadow="hover" style="width: 90%; margin-bottom: 8px;">
+                    <div style="padding: 14px;">
+                        <a>司机ID：{{ userId }}，司机姓名：{{ driverName }}，司机车牌：{{ plate }}</a><br>
+                        <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p>
+                        {{ ' '.repeat(2) }}<br>
+                        <template slots-scope="scope">
+                            <el-button size="mini" type="warning" @click="warningClick(userId)">警示</el-button>
+                        </template>
+                    </div>
+                </el-card>
+            </el-div>
+
+        </el-div>
+        <div class="footer" margin="20px" align="center">
+            <el-button type="primary" @click="refresh()">刷新下一组</el-button>
+        </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -62,18 +63,18 @@ export default {
             videoElement: null,
             outputElement: null,
             imageSrc: '',
-            userList1:[],
-            userList2:[],
+            userList1: [],
+            userList2: [],
             // status: 'Normal',
-            socket: io('http://localhost:8000') // Replace with your server URL and port
+            socket: io(process.env.VUE_APP_SOCKET_URL)
         };
     },
-    created(){
+    created() {
         this.video_getUserList();
     },
 
-    methods:{
-        async video_getUserList () {
+    methods: {
+        async video_getUserList() {
             const { data } = await videoGetUserList()
             console.log(data.data.UserAll)
 
@@ -83,8 +84,8 @@ export default {
             // console.log('current:' + data.data.current)
             // console.log('total:' + data.data.total)
         },
-        async warningClick (userId) {
-            console.log('userId',userId)
+        async warningClick(userId) {
+            console.log('userId', userId)
             //userId=1;
             const confirmResult = await this.$confirm('是否提醒该用户疲劳驾驶?', '警示', {
                 confirmButtonText: '确定',
@@ -180,7 +181,7 @@ export default {
             this.status = data.status;
         });
     },
-    async refresh(){
+    async refresh() {
         this.mounted();
     },
 
@@ -191,12 +192,12 @@ export default {
 </script>
 
 <style>
-.allVideo{
-    width:94%;
-    height:90%;
+.allVideo {
+    width: 94%;
+    height: 90%;
     display: grid;
-    margin-top:20px;
-    grid-template-rows: 1fr,1fr;
+    margin-top: 20px;
+    grid-template-rows: 1fr, 1fr;
     grid-template-columns: 47% 47%;
     grid-gap: 10px;
     justify-items: center;
@@ -204,9 +205,10 @@ export default {
     border: 1px solid #ccc;
     border-radius: 10px;
 }
-.leftVideo{
-    width:94%;
-    height:auto;
+
+.leftVideo {
+    width: 94%;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-items: center;
@@ -214,16 +216,20 @@ export default {
     border: 1px solid #ccc;
     margin-right: 16px;
 }
+
 .el-button {
     align-items: "center";
 }
-.el-card{
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+
+.el-card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* 添加阴影效果 */
     margin: 10px;
     justify-items: center;
     align-items: center;
 }
-.footer{
+
+.footer {
     margin: 10px;
     justify-items: center;
     align-items: center;
@@ -253,6 +259,5 @@ img {
     width: 100%;
     max-width: 720px;
     height: auto;
-    
-}
-</style>
+
+}</style>

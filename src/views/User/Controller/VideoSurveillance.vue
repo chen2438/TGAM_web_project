@@ -35,7 +35,7 @@ export default {
             imageSrc: '',
             fatigueCount: 0,
             status: 'Normal',
-            socket: io('http://localhost:8000'), // Replace with your server URL and port
+            socket: io(process.env.VUE_APP_SOCKET_URL),
             tableData: [
                 { label: '眯眼计数', value: '' },
                 { label: '眼部状态', value: '' },
