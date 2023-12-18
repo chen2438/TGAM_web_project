@@ -40,13 +40,13 @@ export const getUserById = (userId) => {
  * @param userAddress
  * @returns {AxiosPromise}
  */
-export const editUser = (userId, userScore, reason) => {
+export const editUser = (userId, changePoints, reason) => {
   return request({
     url: '/User/common/editUser',
-    method: 'get',
+    method: 'post',
     params: {
       userId,
-      userScore,
+      changePoints,
       reason
     }
   })

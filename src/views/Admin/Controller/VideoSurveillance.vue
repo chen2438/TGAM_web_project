@@ -15,12 +15,17 @@
             </el-card>
             <el-card shadow="hover" style="width: 90%; margin-bottom: 8px;">
                 <div style="padding: 14px;">
-                    <a>司机ID：{{ userId }}，司机姓名：{{ driverName }}，司机车牌：{{ plate }}</a><br>
-                    <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p>
+                    <!-- <a>司机ID：{{ userId }}，司机姓名：{{ driverName }}，司机车牌：{{ plate }}</a><br>
+                    <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p> -->
+                    <a>司机ID：1，司机姓名：张三，司机车牌：ABC123</a><br>
+                    <p>疲劳次数: 38，当前疲劳情况：眯眼3次，打哈欠5次</p>
                     {{ ' '.repeat(2) }}<br>
-                    <template slots-scope="scope">
+
+                    <!-- 这里的警示和实时数据那里差不多好像有点多余了，先把他注释了 -->
+
+                    <!-- <template slots-scope="scope">
                         <el-button size="mini" type="warning" @click="warningClick(userId)">警示</el-button>
-                    </template>
+                    </template> -->
                 </div>
             </el-card>
         </el-div>
@@ -32,19 +37,22 @@
             </el-card>
             <el-card shadow="hover" style="width: 90%; margin-bottom: 8px;">
                 <div style="padding: 14px;">
-                    <a>司机ID：{{ userId }}，司机姓名：{{ driverName }}，司机车牌：{{ plate }}</a><br>
-                    <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p>
+                    <!-- <a>司机ID：{{ userId }}，司机姓名：{{ driverName }}，司机车牌：{{ plate }}</a><br>
+                    <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p> -->
+                    <!-- <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p> -->
+                    <a>司机ID：2，司机姓名：李四，司机车牌：DEF123</a><br>
+                    <p>疲劳次数: 2，当前疲劳情况：眯眼10次，打哈欠20次</p>
                     {{ ' '.repeat(2) }}<br>
-                    <template slots-scope="scope">
+                    <!-- <template slots-scope="scope">
                         <el-button size="mini" type="warning" @click="warningClick(userId)">警示</el-button>
-                    </template>
+                    </template> -->
                 </div>
             </el-card>
         </el-div>
 
     </el-div>
     <div class="footer" margin="20px" align="center">
-        <el-button type="primary" @click="refresh()">刷新下一组</el-button>
+        <!-- <el-button type="primary" @click="refresh()">刷新下一组</el-button> -->
     </div>
 </div>
 </template>
@@ -54,6 +62,9 @@ import io from 'socket.io-client';
 import { warningtiredUserById } from '@/api/driver'
 import { videoGetUserList } from '@/api/data'
 
+// userList1={"userId":1,"driverName":"张三","plate":"ABC123"}
+
+// userList2={"userId":2,"driverName":"张三","plate":"ABC123"}
 
 export default {
     name: 'AdminFatigueDetection',
@@ -62,7 +73,7 @@ export default {
             videoElement: null,
             outputElement: null,
             imageSrc: '',
-            userList1:[],
+            userList1:{"userId":1,"driverName":"张三","plate":"ABC123"},
             userList2:[],
             // status: 'Normal',
             socket: io('http://localhost:8000') // Replace with your server URL and port
@@ -96,11 +107,11 @@ export default {
             if (confirmResult !== 'confirm') {
                 return this.$message.info('已经取消提醒')
             }
-            const { data } = await warningtiredUserById(userId)
-            console.log(data)
-            if (data.code === 3014) {
-                return this.$message.error('本用户未驾驶车辆')
-            }
+            // const { data } = await warningtiredUserById(userId)
+            // console.log(data)
+            // if (data.code === 3014) {
+            //     return this.$message.error('本用户未驾驶车辆')
+            // }
             this.$message.success('警示成功')
         },
     },
@@ -171,7 +182,7 @@ export default {
                 }, 100); // Send frames every 100ms
             });
         }
-
+        
         this.socket.on('response', (data) => {
             this.imageSrc = 'data:image/jpeg;base64,' + data.data; // Update the image source
             this.driverName = data.driverName;
@@ -180,10 +191,24 @@ export default {
             this.status = data.status;
         });
     },
-    async refresh(){
-        this.mounted();
+    async getUserList () {
+        const { data } = await findUserList()
+        // this.userList = data.data.records
+        console.log(data)
+        if (data.code !== 20000) {
+            return this.$message.error('删除本司机信息失败')
+        }
+        this.$message.success('删除本司机信息成功')
+        this.getUserList()
+        // this.userList = this.userList.filter(user => user.type !== 0);
+        // this.total = data.data.total
+        console.log(data.data)
+        console.log('current:' + data.data.current)
+        console.log('total:' + data.data.total)
     },
-
+    async refresh(){
+        this.getUserList();
+    },
     beforeDestroy() {
         this.socket.disconnect();
     },
@@ -201,8 +226,8 @@ export default {
     grid-gap: 10px;
     justify-items: center;
     align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+    /* border: 1px solid #ccc;
+    border-radius: 10px; */
 }
 .leftVideo{
     width:94%;
@@ -211,7 +236,7 @@ export default {
     flex-direction: column;
     justify-items: center;
     align-items: center;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     margin-right: 16px;
 }
 .el-button {

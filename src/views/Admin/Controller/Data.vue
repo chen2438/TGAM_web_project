@@ -46,7 +46,7 @@
         </el-table-column>
         <el-table-column
           prop="curtimes"
-          label="行车时间YY-MM-DD h:m">
+          label="行车时间">
         </el-table-column>
         <el-table-column
           label="警示"
