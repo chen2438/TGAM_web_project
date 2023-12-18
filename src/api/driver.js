@@ -43,10 +43,10 @@ export const getUserById = (userId) => {
 export const editUser = (userId, userScore, reason) => {
   return request({
     url: '/User/common/editUser',
-    method: 'get',
+    method: 'post',
     params: {
       userId,
-      userScore,
+      changePoints:userScore,
       reason
     }
   })
