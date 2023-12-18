@@ -3,6 +3,7 @@ from flask_cors import CORS
 import random
 from datetime import datetime
 import os
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
 CORS(app)
@@ -94,8 +95,10 @@ cars = [
 users = cars
 tired = cars
 events = [
-    {"eventTime": "2023-4-2 20:46", "event": "过度疲劳，被警示，扣2分"},
-    {"eventTime": "2023-5-2 18:45", "event": "过度疲劳，被警示，扣2分"},
+    {"eventTime": "2011-1-1 20:46", "event": "过度疲劳，被警示，扣2分","userId":'1' },
+    {"eventTime": "2022-2-2 20:46", "event": "过度疲劳，被警示，扣2分","userId":'2' },
+    {"eventTime": "2011-1-1 18:45", "event": "过度疲劳，被警示，扣2分","userId":'1' },
+    {"eventTime": "2022-2-2 18:45", "event": "过度疲劳，被警示，扣2分","userId":'2' }
 ]
 
 
@@ -244,13 +247,17 @@ def edit_user():
     for u in users:
         if u['userId'] == int(userId):
             u['userScore'] = u['userScore']-int(changePoints)
-            u['reminded'] +=1
+            # u['reminded'] +=1
             print('score',u['userScore'])
             break
-    eventReason = reason+"，被警示，扣"+changePoints+"分"
-    newEvent = {"eventTime": datetime.now().date().strftime("%Y-%m-%d"), "event": eventReason},
+    
+    event = '[新消息]' + reason + ',被警示，扣' + changePoints + '分'
+    eventTime = datetime.now().strftime("%Y-%m-%d %H:%M")
+    newEvent = { "eventTime":eventTime, "event":event, "userId":userId }
     events.append(newEvent)
-    # print(events)
+    # emit("response", {"events": events})
+
+    print(events)
     return jsonify({"code": 20000, "message": "用户信息更新成功"})
 
 
@@ -277,6 +284,8 @@ def find_cars_and_user():
 @app.route("/User/common/warningAllTiredUser", methods=["POST"])
 def warning_all_tired_user():
     # 生成警告信息
+    for u in users:
+        u['reminded'] +=1
     return jsonify({"code": 20000, "message": "所有疲劳驾驶用户已警告"})
 
 
@@ -284,6 +293,10 @@ def warning_all_tired_user():
 def warning_tired_user_by_id():
     # 根据用户ID生成警告
     user_id = request.args.get("userId")
+    for u in users:
+        if u['userId'] == int(user_id):
+            u['reminded'] +=1
+            break
     # 在这里只返回成功信息
     return jsonify({"code": 20000, "message": f"用户 {user_id} 已被警告"})
 

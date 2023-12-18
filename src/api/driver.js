@@ -34,10 +34,10 @@ export const getUserById = (userId) => {
 }
 
 /**
- * 管理员修改司机信息
+ * 管理员给司机扣分
  * @param userId
- * @param userCity
- * @param userAddress
+ * @param changePoints
+ * @param reason
  * @returns {AxiosPromise}
  */
 export const editUser = (userId, userScore, reason) => {
