@@ -15,12 +15,9 @@
             </el-card>
             <el-card shadow="hover" style="width: 90%; margin-bottom: 8px;">
                 <div style="padding: 14px;">
-                    <!-- <a>司机ID：{{ userId }}，司机姓名：{{ driverName }}，司机车牌：{{ plate }}</a><br>
-                    <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p> -->
-                    <a>司机ID：1，司机姓名：张三，司机车牌：ABC123</a><br>
-                    <p>疲劳次数: 38，当前疲劳情况：眯眼3次，打哈欠5次</p>
+                    <a>司机ID：{{ userId }}，司机姓名：{{ driverName }}，司机车牌：{{ plate }}</a><br>
+                    <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p>
                     {{ ' '.repeat(2) }}<br>
-
                     <template slots-scope="scope">
                         <el-button size="mini" type="warning" @click="warningClick(userId)">警示</el-button>
                     </template>
@@ -35,11 +32,8 @@
             </el-card>
             <el-card shadow="hover" style="width: 90%; margin-bottom: 8px;">
                 <div style="padding: 14px;">
-                    <!-- <a>司机ID：{{ userId }}，司机姓名：{{ driverName }}，司机车牌：{{ plate }}</a><br>
-                    <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p> -->
-                    <!-- <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p> -->
-                    <a>司机ID：2，司机姓名：李四，司机车牌：DEF123</a><br>
-                    <p>疲劳次数: 2，当前疲劳情况：眯眼10次，打哈欠20次</p>
+                    <a>司机ID：{{ userId }}，司机姓名：{{ driverName }}，司机车牌：{{ plate }}</a><br>
+                    <p>疲劳次数: {{ fatigueCount }}，当前疲劳等级：{{ status }}</p>
                     {{ ' '.repeat(2) }}<br>
                     <template slots-scope="scope">
                         <el-button size="mini" type="warning" @click="warningClick(userId)">警示</el-button>
@@ -50,7 +44,7 @@
 
     </el-div>
     <div class="footer" margin="20px" align="center">
-        <!-- <el-button type="primary" @click="refresh()">刷新下一组</el-button> -->
+        <el-button type="primary" @click="refresh()">刷新下一组</el-button>
     </div>
 </div>
 </template>
@@ -59,9 +53,6 @@
 import io from 'socket.io-client';
 import { warningtiredUserById } from '@/api/driver'
 import { videoGetUserList } from '@/api/data'
-
-// userList1={"userId":1,"driverName":"张三","plate":"ABC123"}
-// userList2={"userId":2,"driverName":"张三","plate":"ABC123"}
 
 export default {
     name: 'AdminFatigueDetection',
@@ -84,10 +75,10 @@ export default {
         async video_getUserList () {
             const { data } = await videoGetUserList()
             console.log(data.data.UserAll)
-            // this.total = data.data.total
-            // this.userList = data.data.UserAll
-            // console.log('current:' + data.data.current)
-            // console.log('total:' + data.data.total)
+            this.total = data.data.total
+            this.userList = data.data.UserAll
+            console.log('current:' + data.data.current)
+            console.log('total:' + data.data.total)
         },
         async warningClick (userId) {
             console.log('userId',userId)
@@ -140,15 +131,15 @@ export default {
     },
     async getUserList () {
         const { data } = await findUserList()
-        // this.userList = data.data.records
+        this.userList = data.data.records
         console.log(data)
         if (data.code !== 20000) {
             return this.$message.error('删除本司机信息失败')
         }
         this.$message.success('删除本司机信息成功')
         this.getUserList()
-        // this.userList1 = this.userList1.filter(user => user.type !== 0);
-        // this.total = data.data.total
+        this.userList1 = this.userList1.filter(user => user.type !== 0);
+        this.total = data.data.total
         console.log(data.data)
         console.log('current:' + data.data.current)
         console.log('total:' + data.data.total)
