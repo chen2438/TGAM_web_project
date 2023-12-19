@@ -74,8 +74,8 @@ export default {
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
 
-                canvas.width = 600;
-                canvas.height = 400;
+                canvas.width = 300;
+                canvas.height = 200;
 
                 setInterval(() => {
                     context.drawImage(this.videoElement, 0, 0, canvas.width, canvas.height);

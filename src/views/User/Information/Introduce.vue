@@ -4,7 +4,7 @@
             <el-header>
                 <el-col>
                     <el-card shadow="always" style="text-align: center;font-weight: 800; font-size: larger;">
-                        <img src="../../../assets/img/center.png" alt="" style="float: left; margin-left: 50px;">
+                        <!-- <img src="../../../assets/img/center.png" alt="" style="float: left; margin-left: 50px;"> -->
                         <p>普通路莫逆行，人行横道请避行，机动高速不龟行。</p>
                         <p>校客危定检安，遇见校车超规让，故障停车灯标亮。</p>
                         <p>不加塞不接打，货车休息四百二，城高路上不偏道。</p>
@@ -155,22 +155,21 @@
                         </el-tab-pane>
                     </el-tabs>
 
-            </el-main>
+                </el-main>
+            </el-container>
         </el-container>
-    </el-container>
-</div></template>
+    </div>
+</template>
   
   
-  <script>
-    export default {
-      data() {
+<script>
+export default {
+    data() {
         return {
-        activeNames: ['1']
-      };
-      }
-    };
-  </script>
-  <style scoped>
-
-  </style>
+            activeNames: ['1']
+        };
+    }
+};
+</script>
+<style scoped></style>
   

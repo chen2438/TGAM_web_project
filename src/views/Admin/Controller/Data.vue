@@ -15,24 +15,24 @@
       <!--用户司机信息表格-->
       <el-table max-height="369px" :data="userList" border :header-cell-style="{ 'text-align': 'center' }"
         :cell-style="{ 'text-align': 'center' }" style="width: 100%">
-        <el-table-column prop="userId" label="用户编号" width="80">
+        <el-table-column prop="userId" label="用户编号">
         </el-table-column>
-        <el-table-column prop="userName" label="姓名" width="100">
+        <el-table-column prop="userName" label="姓名">
         </el-table-column>
-        <el-table-column prop="carPlates" label="当前驾驶车牌" width="130">
+        <el-table-column prop="carPlates" label="当前驾驶车牌">
         </el-table-column>
-        <el-table-column prop="tiredSituation" label="十分钟内疲劳情况" width="300">
+        <el-table-column prop="tiredSituation" label="十分钟内疲劳情况">
         </el-table-column>
-        <el-table-column prop="reminded" label="被提醒次数" width="100">
+        <el-table-column prop="reminded" label="被提醒次数">
         </el-table-column>
-        <el-table-column prop="curtimes" label="行车时间YY-MM-DD h:m">
+        <el-table-column prop="curtimes" label="行车时间">
         </el-table-column>
-        <el-table-column label="警示" width="100">
+        <el-table-column label="警示">
           <template slot-scope="scope">
             <el-button type="warning" @click="warningClick(scope.row.userId)">警示</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="扣分" width="100">
+        <el-table-column label="扣分">
           <template slot-scope="scope">
             <el-button type="danger" @click="showEditDialog(scope.row.userId)">扣分</el-button>
           </template>
