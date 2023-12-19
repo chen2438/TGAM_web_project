@@ -70,18 +70,28 @@ export default {
             navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
                 this.videoElement.srcObject = stream;
                 this.videoElement.play();
+                var width = 300, height = 300;
+                // 当视频元数据加载完成时获取尺寸
+                this.videoElement.onloadedmetadata = () => {
+                    width = this.videoElement.videoWidth;
+                    height = this.videoElement.videoHeight;
+                    console.log(`摄像头尺寸: ${width}, ${height}`);
+                    // 在这里进行其他操作，例如调整canvas尺寸
 
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
 
-                canvas.width = 200;
-                canvas.height = 150;
+                    const maxWidth = 300;
+                    canvas.width = maxWidth;
+                    canvas.height = (height / width) * canvas.width;
+                    console.log(`视频尺寸: ${canvas.width}, ${canvas.height}`);
 
-                setInterval(() => {
-                    context.drawImage(this.videoElement, 0, 0, canvas.width, canvas.height);
-                    const dataURL = canvas.toDataURL('image/jpeg');
-                    this.socket.emit('frame', dataURL.split(',')[1]); // Send the frame to the server
-                }, 200); // Send frames every 100ms
+                    setInterval(() => {
+                        context.drawImage(this.videoElement, 0, 0, canvas.width, canvas.height);
+                        const dataURL = canvas.toDataURL('image/jpeg');
+                        this.socket.emit('frame', dataURL.split(',')[1]); // Send the frame to the server
+                    }, 200); // Send frames every 100ms
+                };
             });
         }
 
