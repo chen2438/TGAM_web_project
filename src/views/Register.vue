@@ -3,9 +3,9 @@
 <template>
   <!--注册表单的容器-->
   <div class="login_container">
-    <div class="title">
+    <!-- <div class="title">
       <span>疲劳驾驶监控中心</span>
-    </div>
+    </div> -->
     <!--注册区域-->
     <div class="login_box" style="margin-top: 50px">
       <!--头像-->
@@ -227,10 +227,12 @@ export default {
 }
 
 .login_container {
-  background: url(../assets/img/img_3.png) no-repeat;
-  background-size: 100% 770px;
-  overflow: hidden;
+  margin: 0;
+  padding: 0;
   height: 100%;
+  background-image: url(../assets/img/img_3.png);
+  background-size: cover;
+  background-position: center;
 }
 </style>
   

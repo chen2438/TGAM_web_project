@@ -1,9 +1,9 @@
 <template>
   <!--登录表单的容器-->
   <div class="login_container">
-    <div class="title">
+    <!-- <div class="title">
       <span>疲劳驾驶监控中心</span>
-    </div>
+    </div> -->
     <!--登录区域-->
     <div class="login_box" style="margin-top: 50px">
       <!--头像-->
@@ -27,7 +27,7 @@
           </div>
         </el-form-item>
 
-        
+
         <el-form-item class="login_btn" style="white-space: pre;">
           <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
           <el-button @click="resetForm('loginForm')">重置</el-button>
@@ -76,7 +76,7 @@ export default {
             type: 'warning',
             duration: 1200
           })
-          
+
           return false
         }
       })
@@ -110,22 +110,22 @@ export default {
           duration: 2000
         })
       } else if (data.code === 20000 && data.data.type === 0) {
-        this.$cookies.set('adminseessionid',data.data.sessionid)
+        this.$cookies.set('adminseessionid', data.data.sessionid)
 
         this.$message({
           message: '登录成功',
           type: 'success',
           duration: 2000,
           onClose: () => {
-          this.$router.push('/Adminmain')
+            this.$router.push('/Adminmain')
           }
         })
-       } else if(data.code === 20000 && data.data.type === 1){
+      } else if (data.code === 20000 && data.data.type === 1) {
         // 不用store中的sessionid，页面刷新数据就会丢失，用cookies
-        this.$cookies.set('usersessionid',data.data.sessionid)
-        this.$cookies.set('userName',data.data.userName)
-        this.$cookies.set('userAccount',data.data.userAccount)
-        this.$cookies.set('carPlates',data.data.carPlates)
+        this.$cookies.set('usersessionid', data.data.sessionid)
+        this.$cookies.set('userName', data.data.userName)
+        this.$cookies.set('userAccount', data.data.userAccount)
+        this.$cookies.set('carPlates', data.data.carPlates)
         console.log(data.data.sessionid)
         console.log(this.$cookies.get('usersessionid'))
         this.$message({
@@ -147,7 +147,7 @@ export default {
   color: dimgray;
   -webkit-text-stroke: 1px black;
   letter-spacing: 0.04em;
-  background-color: #FFFFFF;
+  // background-color: #FFFFFF;
   font-size: 50px;
   font-weight: bold;
   text-shadow: 1px -1px black, 2px -2px white;
@@ -155,10 +155,10 @@ export default {
   opacity: 0.45;
 }
 
-.login_container {
-  height: 100%;
-  background-color: #708090;
-}
+// .login_container {
+//   height: 100%;
+//   background-color: #708090;
+// }
 
 .login_box {
   width: 450px;
@@ -199,6 +199,7 @@ export default {
       display: flex;
       justify-content: flex-end;
     }
+
     .tip-color {
       color: #708090;
     }
@@ -229,8 +230,11 @@ export default {
 }
 
 .login_container {
-  background: url(../assets/img/img_3.png) no-repeat;
-  background-size: 100% 770px;
-  overflow: hidden;
+  margin: 0;
+  padding: 0;
   height: 100%;
-}</style>
+  background-image: url(../assets/img/img_3.png);
+  background-size: cover;
+  background-position: center;
+}
+</style>
