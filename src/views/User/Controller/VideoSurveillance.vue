@@ -81,7 +81,7 @@ export default {
                     context.drawImage(this.videoElement, 0, 0, canvas.width, canvas.height);
                     const dataURL = canvas.toDataURL('image/jpeg');
                     this.socket.emit('frame', dataURL.split(',')[1]); // Send the frame to the server
-                }, 100); // Send frames every 100ms
+                }, 200); // Send frames every 100ms
             });
         }
 

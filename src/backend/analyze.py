@@ -15,11 +15,11 @@ predictor = dlib.shape_predictor("src/backend/shape_predictor_68_face_landmarks.
 
 # 定义闭眼阈值和帧计数
 EYE_AR_THRESH = 0.15
-EYE_AR_CONSEC_FRAMES = 10
+EYE_AR_CONSEC_FRAMES = 5
 
 # 定义打哈欠阈值和帧计数
 MOUTH_AR_THRESH = 0.6
-MOUTH_AR_CONSEC_FRAMES = 10
+MOUTH_AR_CONSEC_FRAMES = 5
 
 # 初始化帧计数器和闭眼、打哈欠计数器
 EYE_COUNTER = 0
@@ -142,7 +142,9 @@ def handle_frame(data):
             "mouth_count": MOUTH_TOTAL,
             "mouth_text": mouth_text,
         },
-  )
+    )
+
+
 # from flask_socketio import SocketIO, emit
 # import cv2
 # import dlib
@@ -245,4 +247,3 @@ def handle_frame(data):
 #
 #     # 发送响应到客户端
 #     emit("response", {"data": response, "count": TOTAL, "status": text})
-
