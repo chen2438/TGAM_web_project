@@ -129,21 +129,6 @@ export default {
             this.status = data.status;
         });
     },
-    async getUserList () {
-        const { data } = await findUserList()
-        this.userList = data.data.records
-        console.log(data)
-        if (data.code !== 20000) {
-            return this.$message.error('删除本司机信息失败')
-        }
-        this.$message.success('删除本司机信息成功')
-        this.getUserList()
-        this.userList1 = this.userList1.filter(user => user.type !== 0);
-        this.total = data.data.total
-        console.log(data.data)
-        console.log('current:' + data.data.current)
-        console.log('total:' + data.data.total)
-    },
     async refresh(){
         this.getUserList();
     },
