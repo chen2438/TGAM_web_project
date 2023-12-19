@@ -130,7 +130,7 @@ export default {
         });
     },
     async refresh(){
-        this.getUserList();
+        this.mounted();
     },
     beforeDestroy() {
         this.socket.disconnect();
