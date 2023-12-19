@@ -13,7 +13,7 @@
         </el-alert>
         <video ref="videoElement" autoplay style="display: none;"></video>
         <img :src="imageSrc" class="img-styled" />
-        <el-table :data="tableData" class="img-styled">
+        <el-table :data="tableData" class="table-styled">
             <el-table-column prop="label" label="项目"></el-table-column>
             <el-table-column prop="value" label="数据"></el-table-column>
         </el-table>
@@ -74,8 +74,8 @@ export default {
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
 
-                canvas.width = 150;
-                canvas.height = 100;
+                canvas.width = 200;
+                canvas.height = 150;
 
                 setInterval(() => {
                     context.drawImage(this.videoElement, 0, 0, canvas.width, canvas.height);
@@ -110,6 +110,25 @@ export default {
   
 <style>
 .img-styled {
+    border: 4px solid #ddd;
+    /* 添加边框 */
+    border-radius: 10px;
+    /* 圆角边框 */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    /* 添加阴影 */
+    width: 80%;
+    /* 调整图片宽度 */
+    max-width: 300px;
+    /* 最大宽度 */
+    height: auto;
+    /* 高度自适应 */
+    display: block;
+    /* 居中显示 */
+    margin: 10px auto;
+    /* 上下外边距 */
+}
+
+.table-styled {
     border: 4px solid #ddd;
     /* 添加边框 */
     border-radius: 10px;
