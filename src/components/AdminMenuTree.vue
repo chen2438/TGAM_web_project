@@ -40,10 +40,10 @@
           <i class="el-icon-date"></i>
           <span slot="title">实时数据</span>
         </el-menu-item>
-        <el-menu-item index="/admin-video-surveillance">
+        <!-- <el-menu-item index="/admin-video-surveillance">
           <i class="el-icon-video-camera"></i>
           <span slot="title">视频监控</span>
-        </el-menu-item>
+        </el-menu-item> -->
 
       </el-submenu>
     </template>

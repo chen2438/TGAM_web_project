@@ -52,11 +52,12 @@ const routes = [
         path: '/adminhost',
         name: 'AdminHost',
         component: () => import(/* webpackChunkName: "about" */ '../views/Admin/Host.vue')
-      }, {
-        path: '/admin-video-surveillance',
-        name: 'AdminVideoSurveillance',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Admin/Controller/VideoSurveillance.vue')
-      }
+      },
+      // {
+      //   path: '/admin-video-surveillance',
+      //   name: 'AdminVideoSurveillance',
+      //   component: () => import(/* webpackChunkName: "about" */ '../views/Admin/Controller/VideoSurveillance.vue')
+      // }
     ]
   },
   {
