@@ -108,12 +108,11 @@ tired = [
     },
 ]
 events = [
-    {"eventTime": "2011-1-1 20:46", "event": "过度疲劳，被警示，扣2分","userId":'1' },
-    {"eventTime": "2022-2-2 20:46", "event": "过度疲劳，被警示，扣2分","userId":'2' },
-    {"eventTime": "2011-1-1 18:45", "event": "过度疲劳，被警示，扣2分","userId":'1'},
-    {"eventTime": "2022-2-2 18:45", "event": "过度疲劳，被警示，扣2分","userId":'2'}
+    {"eventTime": "2011-1-1 20:46", "event": "过度疲劳，被警示，扣2分", "userId": "1"},
+    {"eventTime": "2022-2-2 20:46", "event": "过度疲劳，被警示，扣2分", "userId": "2"},
+    {"eventTime": "2011-1-1 18:45", "event": "过度疲劳，被警示，扣2分", "userId": "1"},
+    {"eventTime": "2022-2-2 18:45", "event": "过度疲劳，被警示，扣2分", "userId": "2"},
 ]
-
 
 
 @app.route("/Account/AccountLogin", methods=["POST"])
@@ -125,7 +124,13 @@ def account_login():
     # 遍历登录信息列表，检查用户名和密码是否匹配
     for login in users:
         if login["userAccount"] == name and login["userPassword"] == pwd:
-            carPlates = [car["carPlates"] for car in cars if car["userId"] == login["userId"] and login["type"] == 1],
+            carPlates = (
+                [
+                    car["carPlates"]
+                    for car in cars
+                    if car["userId"] == login["userId"] and login["type"] == 1
+                ],
+            )
             # 登录成功，返回对应的用户类型
             response = {
                 "code": 20000,
@@ -136,7 +141,7 @@ def account_login():
                     "sessionid": login["userId"],
                     "userName": login["userName"],
                     "userAccount": login["userAccount"],
-                    "carPlates": carPlates[0]
+                    "carPlates": carPlates[0],
                 },
             }
             return jsonify(response)
@@ -242,14 +247,10 @@ def edit_user():
     userScore = request.args.get("userScore")
     reason = request.args.get("reason")
     eventTime = datetime.now().strftime("%Y-%m-%d %H:%M")
-    event = {
-        "eventTime":eventTime,
-        "event":reason+userScore,
-        "userId":userId
-    }
+    event = {"eventTime": eventTime, "event": reason + userScore, "userId": userId}
     events.append(event)
 
-    emit("response", {"events": events})
+    # emit("response", {"events": events})
     return jsonify({"code": 20000, "message": "用户信息更新成功"})
 
 
@@ -303,8 +304,9 @@ def warning_tired_user_by_id():
 @app.route("/Car/findStoppedCars", methods=["GET"])
 def find_stopped_cars():
     # 模拟未启动车辆数据
-    stopped_cars = [car for car in cars if car["carState"]==0]
+    stopped_cars = [car for car in cars if car["carState"] == 0]
     return jsonify({"code": 20000, "data": {"stoppedCarList": stopped_cars}})
+
 
 def generate_random_coordinates():
     longitude = round(random.uniform(120.1, 120.2), 10)
@@ -316,13 +318,13 @@ def generate_random_coordinates():
 def find_started_cars():
     # 模拟已启动车辆数据
     # 如果要求实现实时更新与服务区距离，已启动车的坐标不能写死，每5000ms：前端通过该请求获取车辆坐标
-    #然后再每5000ms：当前司机车辆该坐标传参通过updateDist请求，计算服务区距离，返回数据
-    started_cars = [car for car in cars if car["carState"]==1]
+    # 然后再每5000ms：当前司机车辆该坐标传参通过updateDist请求，计算服务区距离，返回数据
+    started_cars = [car for car in cars if car["carState"] == 1]
     # 随机设置司机的状态
     # 优化应该根据人脸识别存储的数据设置状态
     for car in started_cars:
         car["userNow"] = random.randint(0, 1)
-    #随机设置启动车的位置
+    # 随机设置启动车的位置
     for car in started_cars:
         car["carTude"] = generate_random_coordinates()
     return jsonify({"code": 20000, "data": {"startedCarList": started_cars}})
@@ -332,7 +334,9 @@ def find_started_cars():
 def userInfo():
     target = int(request.args.get("userId"))
     print(target)
-    res_user = [user for user in users if user["userId"] == target and user["type"] == 1]
+    res_user = [
+        user for user in users if user["userId"] == target and user["type"] == 1
+    ]
     return jsonify({"code": 20000, "res": res_user[0], "events": events})
 
 
@@ -341,35 +345,40 @@ def updateUser():
     temp_user = request.args.get("userId")
     return jsonify({"code": 20000, "message": "用户修改成功"})
 
+
 @app.route("/User/updatevideo", methods=["GET"])
 def updateVideo():
     status = request.args.get("status")
-    temp  = {}
+    temp = {}
     temp["userName"] = status["userName"]
     temp["carPlates"] = status["carPlates"]
-    temp["tiredSituation"] = status["situation"],
-    temp["times"] = status["fatigue"],
-    temp["reminded"] = status["reminded"],
-    temp["curtimes"] = status["time"],
+    temp["tiredSituation"] = (status["situation"],)
+    temp["times"] = (status["fatigue"],)
+    temp["reminded"] = (status["reminded"],)
+    temp["curtimes"] = (status["time"],)
     tired.append(temp)
-    if(temp):
-        emit("response", {"tired": tired})
+    if temp:
+        # emit("response", {"tired": tired})
         return jsonify({"code": 20000, "message": "视频数据更新成功"})
     else:
         return jsonify({"code": 4001, "message": "视频数据更新失败"})
 
-@app.route("/Userhost/updatedist",methods=["GET"])
+
+@app.route("/Userhost/updatedist", methods=["GET"])
 def updateDist():
     x = request.args.get("curlocat_x")
     y = request.args.get("curlocat_y")
-    print(x,y)
-    #假设服务区地址["0","0"]
-    serve = ['0','0']
-    if(x != None and y!= None):
-        dist = math.sqrt((float(x)-float(serve[0]))**2+(float(y)-float(serve[1]))**2)
-        return jsonify({"code":20000,"curdist":dist})
+    print(x, y)
+    # 假设服务区地址["0","0"]
+    serve = ["0", "0"]
+    if x != None and y != None:
+        dist = math.sqrt(
+            (float(x) - float(serve[0])) ** 2 + (float(y) - float(serve[1])) ** 2
+        )
+        return jsonify({"code": 20000, "curdist": dist})
     else:
-        return jsonify({"code":20000,"curdist":"XXXXXX"})
+        return jsonify({"code": 20000, "curdist": "XXXXXX"})
+
 
 from gevent import pywsgi
 
@@ -379,4 +388,3 @@ if __name__ == "__main__":
     # socketio.run(app, debug=True, port=8000, allow_unsafe_werkzeug=True)
     server = pywsgi.WSGIServer(("0.0.0.0", 8000), app)
     server.serve_forever()
-
