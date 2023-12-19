@@ -45,6 +45,7 @@ export default {
             lastEyeCount: 0,
             lastMouthCount: 0,
             showAlert: false, // 控制提醒卡片的显示
+            userId: '', // 添加一个用于存储随机字符串的数据属性
         };
 
     },
@@ -60,9 +61,15 @@ export default {
         playAlertSound() {
             const audio = new Audio('/audio/remind.mp3'); // 音频文件路径
             audio.play();
+        },
+        generateUserId() {
+            // 生成一个随机字符串作为userId
+            return Math.random().toString(36).substring(2, 15) +
+                Math.random().toString(36).substring(2, 15);
         }
     },
     mounted() {
+        this.userId = this.generateUserId(); // 页面加载时生成userId
         this.videoElement = this.$refs.videoElement;
         this.outputElement = this.$refs.outputElement;
 
@@ -89,8 +96,9 @@ export default {
                     setInterval(() => {
                         context.drawImage(this.videoElement, 0, 0, canvas.width, canvas.height);
                         const dataURL = canvas.toDataURL('image/jpeg');
-                        this.socket.emit('frame', dataURL.split(',')[1]); // Send the frame to the server
-                    }, 200); // Send frames every 100ms
+                        // 在发送帧数据时，附加userId
+                        this.socket.emit('frame', { image: dataURL.split(',')[1], userId: this.userId });
+                    }, 200); // Send frames every 200ms
                 };
             });
         }

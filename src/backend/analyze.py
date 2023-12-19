@@ -21,12 +21,6 @@ EYE_AR_CONSEC_FRAMES = 5
 MOUTH_AR_THRESH = 0.6
 MOUTH_AR_CONSEC_FRAMES = 5
 
-# 初始化帧计数器和闭眼、打哈欠计数器
-EYE_COUNTER = 0
-MOUTH_COUNTER = 0
-EYE_TOTAL = 0
-MOUTH_TOTAL = 0
-
 
 def eye_aspect_ratio(eye):
     # 计算两组垂直眼标志之间的欧氏距离
@@ -50,11 +44,33 @@ def mouth_aspect_ratio(mouth):
     return mar
 
 
+# 初始化帧计数器和闭眼、打哈欠计数器
+# EYE_COUNTER = 0
+# MOUTH_COUNTER = 0
+# EYE_TOTAL = 0
+# MOUTH_TOTAL = 0
+USERS = {}
+
+
 @socketio.on("frame", namespace="/ws")
 def handle_frame(data):
-    global EYE_COUNTER, EYE_TOTAL, MOUTH_COUNTER, MOUTH_TOTAL
+    user_id = data["userId"]
+    # 确保每个用户的数据独立
+    if user_id not in USERS:
+        USERS[user_id] = {
+            "EYE_COUNTER": 0,
+            "MOUTH_COUNTER": 0,
+            "EYE_TOTAL": 0,
+            "MOUTH_TOTAL": 0,
+        }
+
+    # 使用用户特定的计数器
+    EYE_COUNTER = USERS[user_id]["EYE_COUNTER"]
+    MOUTH_COUNTER = USERS[user_id]["MOUTH_COUNTER"]
+    EYE_TOTAL = USERS[user_id]["EYE_TOTAL"]
+    MOUTH_TOTAL = USERS[user_id]["MOUTH_TOTAL"]
     # 解码图像
-    img_data = base64.b64decode(data)
+    img_data = base64.b64decode(data["image"])
     nparr = np.frombuffer(img_data, np.uint8)
     frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
@@ -132,6 +148,11 @@ def handle_frame(data):
     _, buffer = cv2.imencode(".jpg", frame)
     response = base64.b64encode(buffer).decode("utf-8")
 
+    # 更新用户特定的计数器
+    USERS[user_id]["EYE_COUNTER"] = EYE_COUNTER
+    USERS[user_id]["MOUTH_COUNTER"] = MOUTH_COUNTER
+    USERS[user_id]["EYE_TOTAL"] = EYE_TOTAL
+    USERS[user_id]["MOUTH_TOTAL"] = MOUTH_TOTAL
     # 发送响应到客户端
     emit(
         "response",
