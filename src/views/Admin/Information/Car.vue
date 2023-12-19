@@ -11,14 +11,14 @@
     <el-card class="box-card">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-row type="flex" justify="start">
-          <el-form-item label="车辆位置" style="margin-left: 10px">
-            <el-select v-model="formInline.city" placeholder="请选择">
+          <el-form-item label="车辆城市" style="margin-left: 10px">
+            <el-select v-model="formInline.city" clearable placeholder="请选择">
               <el-option
                 v-for="item in carCityAndCount"
-                :key="item.carTude"
-                :label="item.carTude"
-                :value="item.carTude">
-                <span style="float: left">{{ item.carTude }}</span>
+                :key="item.carCity"
+                :label="item.carCity"
+                :value="item.carCity">
+                <span style="float: left">{{ item.carCity }}</span>
                 <span style="float: right; color: #8492a6; font-size: 13px">
                   <span class="el-tag el-tag--success el-tag--mini el-tag--plain">{{ item.cityCount }}</span>
                 </span>
@@ -78,8 +78,8 @@
           width="150">
         </el-table-column>
         <el-table-column
-          prop="carTude"
-          label="车辆位置"
+          prop="carCity"
+          label="车辆城市"
           width="140">
         </el-table-column>
         <el-table-column

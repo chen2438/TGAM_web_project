@@ -36,7 +36,7 @@ export const updateVideo = (status) => {
 }
 export const videoGetUserList = () => {
   return request({
-    url: 'url',
-    method: 'post',
+    url: '/admin/updatevideo',
+    method: 'get',
   })
 }

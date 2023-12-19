@@ -55,7 +55,6 @@ import io from 'socket.io-client';
 import { warningtiredUserById } from '@/api/driver'
 import { videoGetUserList } from '@/api/data'
 
-
 export default {
     name: 'AdminFatigueDetection',
     data() {
@@ -77,12 +76,10 @@ export default {
         async video_getUserList() {
             const { data } = await videoGetUserList()
             console.log(data.data.UserAll)
-
-
-            // this.total = data.data.total
-            // this.userList = data.data.UserAll
-            // console.log('current:' + data.data.current)
-            // console.log('total:' + data.data.total)
+            this.total = data.data.total
+            this.userList = data.data.UserAll
+            console.log('current:' + data.data.current)
+            console.log('total:' + data.data.total)
         },
         async warningClick(userId) {
             console.log('userId', userId)
@@ -97,62 +94,14 @@ export default {
             if (confirmResult !== 'confirm') {
                 return this.$message.info('已经取消提醒')
             }
-            const { data } = await warningtiredUserById(userId)
-            console.log(data)
-            if (data.code === 3014) {
-                return this.$message.error('本用户未驾驶车辆')
-            }
+            // const { data } = await warningtiredUserById(userId)
+            // console.log(data)
+            // if (data.code === 3014) {
+            //     return this.$message.error('本用户未驾驶车辆')
+            // }
             this.$message.success('警示成功')
         },
     },
-
-    // startStream() {
-    //     const videoElement = this.$refs.video;
-    //     const streamUrl = '/getVideo'; // 与后端路由对应
-
-    //     if (window.MediaSource && MediaSource.isTypeSupported('video/mp4')) {
-    //     const mediaSource = new MediaSource();
-    //     videoElement.src = URL.createObjectURL(mediaSource);
-
-    //     mediaSource.addEventListener('sourceopen', () => {
-    //         const sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
-
-    //         const xhr = new XMLHttpRequest();
-    //         xhr.open('GET', streamUrl);
-    //         xhr.responseType = 'arraybuffer';
-    //         xhr.onerror = () => console.log('Error loading video stream');
-    //         xhr.onprogress = (event) => {
-    //             if (event.lengthComputable) {
-    //                 const percentComplete = (event.loaded / event.total * 100 | 0);
-    //                 console.log(`Loading video stream ${percentComplete}%`);
-    //             }
-    //         };
-    //         xhr.onload = () => {
-    //             const uint8Array = new Uint8Array(xhr.response);
-    //             let i = 0;
-
-    //             (function readChunk() {
-    //                 const length = ((uint8Array[i] << 24) | (uint8Array[i + 1] << 16) | (uint8Array[i + 2] << 8) | uint8Array[i + 3]) >>> 0;
-    //                 i += 4;
-
-    //                 if (length === 0) {
-    //                     mediaSource.endOfStream();
-    //                 } else {
-    //                     const chunk = uint8Array.subarray(i, i + length);
-    //                     i += length;
-
-    //                     sourceBuffer.appendBuffer(chunk);
-    //                     readChunk();
-    //                 }
-    //             })();
-    //         };
-    //         xhr.send();
-    //     });
-    //     } else {
-    //         console.log('Unsupported MIME type or codec: video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
-    //     }
-    // },
-
     mounted() {
         this.videoElement = this.$refs.videoElement;
         this.outputElement = this.$refs.outputElement;
@@ -172,7 +121,7 @@ export default {
                 }, 200); // Send frames every 100ms
             });
         }
-
+        
         this.socket.on('response', (data) => {
             this.imageSrc = 'data:image/jpeg;base64,' + data.data; // Update the image source
             this.driverName = data.driverName;
@@ -184,7 +133,6 @@ export default {
     async refresh() {
         this.mounted();
     },
-
     beforeDestroy() {
         this.socket.disconnect();
     },
@@ -202,8 +150,6 @@ export default {
     grid-gap: 10px;
     justify-items: center;
     align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 10px;
 }
 
 .leftVideo {
@@ -213,7 +159,6 @@ export default {
     flex-direction: column;
     justify-items: center;
     align-items: center;
-    border: 1px solid #ccc;
     margin-right: 16px;
 }
 
@@ -235,25 +180,6 @@ export default {
     align-items: center;
     padding: 5px;
 }
-
-/* .rowVideo{
-    height:100%;
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 50% 50%;
-    grid-gap: 10px;
-    justify-items: center;
-    align-items: center;
-}
-.eachVideo{
-    width:80%;
-    height:auto;
-    justify-items: center;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 10px;
-} */
 
 img {
     width: 100%;
