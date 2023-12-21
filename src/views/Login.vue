@@ -94,20 +94,17 @@ export default {
       this.$store.commit('getToken', data.data.token)
       this.$store.commit('getData', data.data.shop)
       this.$store.commit('getId', data.data.sessionid)
-      // console.log(this.$store.state.token)
-      // console.log(this.$store.state.data)
-      // console.log(this.$store.state.sessionid)
       if (data.code === 4001) {
         this.$message({
           message: '用户名不存在',
           type: 'warning',
-          duration: 2000,
+          duration: 4000,
         })
       } else if (data.code === 4002) {
         this.$message({
           message: '用户名对应密码错误',
           type: 'warning',
-          duration: 2000
+          duration: 4000
         })
       } else if (data.code === 20000 && data.data.type === 0) {
         this.$cookies.set('adminseessionid', data.data.sessionid)
@@ -115,7 +112,7 @@ export default {
         this.$message({
           message: '登录成功',
           type: 'success',
-          duration: 2000,
+          duration: 4000,
           onClose: () => {
             this.$router.push('/Adminmain')
           }
@@ -131,7 +128,7 @@ export default {
         this.$message({
           message: '登录成功',
           type: 'success',
-          duration: 2000,
+          duration: 4000,
           onClose: () => {
             this.$router.push('/Usermain')
           }

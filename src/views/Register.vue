@@ -122,13 +122,13 @@ export default {
         this.$message({
           message: '注册失败，请重新注册',
           type: 'warning',
-          duration: 2000
+          duration: 4000
         })
       } else if (data.code === 20000 && this.flag === 1) {
         this.$message({
           message: '注册成功，去登录！',
           type: 'success',
-          duration: 2000,
+          duration: 4000,
           onClose: () => {
             this.$router.push('/login')
           }
